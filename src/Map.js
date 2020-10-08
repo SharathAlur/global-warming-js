@@ -1,7 +1,8 @@
+"use strict";
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 import styles from './styles/styles';
-import { CRITICAL_COLORS } from './constants';
+// import { CRITICAL_COLORS } from './constants';
 
 const initialize = (config, data) => {
     config.svg = null;
@@ -10,9 +11,9 @@ const initialize = (config, data) => {
 }
 const projection = d3.geoMercator().translate([400, 350]).scale(120);
     
-const selectCountry = path => d3.select(path).classed(styles.selected, true);
+const selectCountry = path => d3.select(path).attr('aria-selected', true);
 
-const deselectCountry = path => d3.select(path).classed(styles.selected, false);
+const deselectCountry = path => d3.select(path).attr('aria-selected', false);
 
 
 export default class Map {
@@ -20,30 +21,31 @@ export default class Map {
         initialize(this, data);
         this.drawMap = this.drawMap.bind(this);
         this.loadDataForYear = this.loadDataForYear.bind(this);
-        this.getEmissionColor = this.getEmissionColor.bind(this);
+        this.getEmissionLevel = this.getEmissionLevel.bind(this);
     }
 
-    getEmissionColor(filteredData) {
+    getEmissionLevel(filteredData) {
         return ((d) => {
             const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
-            let emissionStatusColor = CRITICAL_COLORS.LEVEL0;
+            let emissionStatusColor = 0;
             if (!countryEmission) {
-                emissionStatusColor = CRITICAL_COLORS.LEVEL0;
+                emissionStatusColor = 0;
             } else if (countryEmission['Annual CO2'] < 50000000) {
-                emissionStatusColor = CRITICAL_COLORS.LEVEL1;
+                emissionStatusColor = 1;
             } else if (countryEmission['Annual CO2'] < 500000000) {
-                emissionStatusColor = CRITICAL_COLORS.LEVEL2;
+                emissionStatusColor = 2;
             } else if (countryEmission['Annual CO2'] < 5000000000) {
-                emissionStatusColor = CRITICAL_COLORS.LEVEL3;
+                emissionStatusColor = 3;
             } else if (countryEmission['Annual CO2'] < 50000000000) {
-                emissionStatusColor = CRITICAL_COLORS.LEVEL4;
+                emissionStatusColor = 4;
             } else if (countryEmission['Annual CO2'] < 10000000000) {
-                emissionStatusColor = CRITICAL_COLORS.LEVEL2;
+                emissionStatusColor = 5;
             } else if (countryEmission['Annual CO2'] < 25000000000) {
-                emissionStatusColor = CRITICAL_COLORS.LEVEL6;
+                emissionStatusColor = 6;
             } else if (countryEmission['Annual CO2'] < 40000000000) {
-                emissionStatusColor = CRITICAL_COLORS.LEVEL7;
+                emissionStatusColor = 7;
             }
+            console.log(emissionStatusColor);
             return emissionStatusColor;
         })
     }
@@ -80,7 +82,7 @@ export default class Map {
         console.log(filteredData.find(item => {console.log(item);return item.Entity === "india";}))
         const temp = d3.selectAll(`.${styles.mapCountry}`)//.each((item, b) => console.log('******',item))
 
-        temp.transition().style('fill', this.getEmissionColor(filteredData));
+        temp.transition().duration(50).attr('aria-level', this.getEmissionLevel(filteredData));
         // temp.each(tester)
         // .data(filteredData)
         // .enter()

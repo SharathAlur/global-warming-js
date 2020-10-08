@@ -1,15 +1,49 @@
+@border-color: black;
+@level-0: #f1f1f1;
+@level-1: #fdf4e3;
+@level-2: #f7d7ad;
+@level-3: #f3c498;
+@level-4: #eb9f6f;
+@level-5: #e17a5d;
+@level-6: #ca4a32;
+@level-7: #942412;
+
 .header  {
     font-family: 'Merriweather', serif;
     font-size: 30px;
 }
 .map {
     padding-top: 30px;
-    fill:#f1f1f1;
 }
 .map-country {
     margin: 0;
-}
-.selected {
-    stroke-width: 2px;
-    stroke: black;
+    fill: @level-0;
+    &[aria-selected="true"] {
+        stroke-width: 2px;
+        stroke: @border-color;
+    }
+    &[aria-level="0"] {
+        fill:@level-0;
+    }
+    &[aria-level="1"] {
+        fill:@level-1;
+    }
+    &[aria-level="2"] {
+        fill:@level-2;
+    }
+    &[aria-level="3"] {
+        fill:@level-3;
+    }
+    &[aria-level="4"] {
+        fill:@level-4;
+    }
+    &[aria-level="5"] {
+        fill:@level-5;
+    }
+    &[aria-level="6"] {
+        fill:@level-6;
+    }
+    &[aria-level="7"] {
+        fill:@level-7;
+    }
 }

@@ -1,0 +1,42 @@
+.header {
+  font-family: 'Merriweather', serif;
+  font-size: 30px;
+}
+.map {
+  padding-top: 30px;
+}
+.map-country {
+  margin: 0;
+  fill: #f1f1f1;
+}
+.map-country[aria-selected="true"] {
+  stroke-width: 2px;
+  stroke: black;
+}
+.map-country[aria-level="0"] {
+  fill: #f1f1f1;
+}
+.map-country[aria-level="1"] {
+  fill: #fdf4e3;
+}
+.map-country[aria-level="2"] {
+  fill: #f7d7ad;
+}
+.map-country[aria-level="3"] {
+  fill: #f3c498;
+}
+.map-country[aria-level="4"] {
+  fill: #eb9f6f;
+}
+.map-country[aria-level="5"] {
+  fill: #e17a5d;
+}
+.map-country[aria-level="6"] {
+  fill: #ca4a32;
+}
+.map-country[aria-level="7"] {
+  fill: #942412;
+}
+
+
+/*# sourceMappingURL=app.css.map*/
