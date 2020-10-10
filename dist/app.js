@@ -33560,6 +33560,49 @@ function sphericalTriangleArea(t) {
 
 /***/ }),
 
+/***/ "./src/ColorCodes.js":
+/*!***************************!*\
+  !*** ./src/ColorCodes.js ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ColorCodes; });
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constants */ "./src/constants.js");
+/* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./styles/styles */ "./src/styles/styles.js");
+
+
+
+
+class ColorCodes {
+    constructor(svg) {
+        this.createColorCode = this.createColorCode.bind(this);
+        this.createColorCode(svg);
+    }
+
+    createColorCode(svg) {
+        this.svg = svg.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].colorCodeUl, true);
+
+        d3__WEBPACK_IMPORTED_MODULE_0__["range"](1, 7, 1).map((value) => {
+            this.svg.append('li').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].colorCodeli, true).append('div')
+            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].colorBox, true)
+            .attr('width', 100)
+            .attr('height', 10)
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('aria-level', value)
+            .attr('value', value)
+            .on('mouseenter', d => console.log(d.path[0].getAttribute('aria-level')))
+            .on('mouseleave', d => console.log(d.path[0].getAttribute('aria-level')));
+        });
+    }
+}
+
+/***/ }),
+
 /***/ "./src/Map.js":
 /*!********************!*\
   !*** ./src/Map.js ***!
@@ -33577,7 +33620,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import { CRITICAL_COLORS } from './constants';
 
 const initialize = (config, data) => {
     config.svg = null;
@@ -33585,24 +33627,22 @@ const initialize = (config, data) => {
     config.emissionData = data;
 }
 const projection = d3__WEBPACK_IMPORTED_MODULE_0__["geoMercator"]().translate([400, 350]).scale(120);
-    
-const selectCountry = path => d3__WEBPACK_IMPORTED_MODULE_0__["select"](path).attr('aria-selected', true);
-
-const deselectCountry = path => d3__WEBPACK_IMPORTED_MODULE_0__["select"](path).attr('aria-selected', false);
-
 
 class Map {
-    constructor(data) {
+    constructor(svg, data) {
         initialize(this, data);
+        this.loadMap = this.loadMap.bind(this);
         this.drawMap = this.drawMap.bind(this);
         this.loadDataForYear = this.loadDataForYear.bind(this);
         this.getEmissionLevel = this.getEmissionLevel.bind(this);
+
+        this.loadMap(svg);
     }
 
     getEmissionLevel(filteredData) {
         return ((d) => {
             const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
-            let emissionStatusColor = 0;
+            let emissionStatusColor;
             if (!countryEmission) {
                 emissionStatusColor = 0;
             } else if (countryEmission['Annual CO2'] < 50000000) {
@@ -33620,18 +33660,15 @@ class Map {
             } else if (countryEmission['Annual CO2'] < 40000000000) {
                 emissionStatusColor = 7;
             }
-            console.log(emissionStatusColor);
             return emissionStatusColor;
         })
     }
 
     loadMap(svg) {
         const mapSvg = svg
-            .append('g')
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].map, true)
             .append('svg')
+            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].map, true)
             .attr('y', 30)
-            .attr('height', 500);
         this.svg = mapSvg;
         d3__WEBPACK_IMPORTED_MODULE_0__["json"]('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
             .then(this.drawMap);
@@ -33647,9 +33684,8 @@ class Map {
             .attr('aria-selected', false)
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry, true)
             .attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["geoPath"]().projection(projection))
-            .on('mouseenter', d => selectCountry(d.path[0]))
-            .on('mouseleave', d => deselectCountry(d.path[0]));
-            this.loadDataForYear(2001);
+            .on('mouseenter', d => d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', true))
+            .on('mouseleave', d => d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false));
     }
 
     loadDataForYear(year) {
@@ -33657,13 +33693,41 @@ class Map {
         console.log(filteredData.find(item => {console.log(item);return item.Entity === "india";}))
         const temp = d3__WEBPACK_IMPORTED_MODULE_0__["selectAll"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry}`)//.each((item, b) => console.log('******',item))
 
-        temp.transition().duration(50).attr('aria-level', this.getEmissionLevel(filteredData));
-        // temp.each(tester)
-        // .data(filteredData)
-        // .enter()
-        // .attr('aria-level', (row) => {console.log(row); return 1});
+        d3__WEBPACK_IMPORTED_MODULE_0__["selectAll"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry}`)
+            .transition()
+            .duration(50)
+            .attr('aria-level', 
+                this.getEmissionLevel(filteredData)
+            );
     }
 }
+
+/***/ }),
+
+/***/ "./src/constants.js":
+/*!**************************!*\
+  !*** ./src/constants.js ***!
+  \**************************/
+/*! exports provided: MAP_HEIGHT, TEXT_HEIGHT, CRITICAL_COLORS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAP_HEIGHT", function() { return MAP_HEIGHT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TEXT_HEIGHT", function() { return TEXT_HEIGHT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CRITICAL_COLORS", function() { return CRITICAL_COLORS; });
+const MAP_HEIGHT = 500;
+const TEXT_HEIGHT = 30;
+const CRITICAL_COLORS = {
+    LEVEL0: "#f1f1f1",
+    LEVEL1: "#fdf4e3",
+    LEVEL2: "#f7d7ad",
+    LEVEL3: "#f3c498",
+    LEVEL4: "#eb9f6f",
+    LEVEL5: "#e17a5d",
+    LEVEL6: "#ca4a32",
+    LEVEL7: "#942412",
+};
 
 /***/ }),
 
@@ -33719,6 +33783,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Map */ "./src/Map.js");
 /* harmony import */ var _data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./data/CO2-Emissions-Country-Wise.csv */ "./src/data/CO2-Emissions-Country-Wise.csv");
 /* harmony import */ var _data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _ColorCodes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ColorCodes */ "./src/ColorCodes.js");
+
 
 
 
@@ -33730,18 +33796,19 @@ const initiate = (config) => {
     config.svg = null;
     config.headerSvg = null;
     config.map = null;
-    config.warmSvg = null;
+    config.colorCodes = null;
     config.progressBarSvg = null;
 }
 
 const loadHeader = (svg) => {
-    const headerSvg = svg.append("g")
+    const headerSvg = svg.append("svg")
         .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].header, true)
         .append('text');
         // .html("<span>Cummulative CO<sub>2</sub> emissions, 2017</span>");
     headerSvg
         .attr('x', 10)
         .attr('y', 25)
+        .attr('width', '100%')
         .text('Cummulative CO2 emissions, 2017');
     return headerSvg;
 }
@@ -33750,18 +33817,26 @@ class Main {
     constructor() {
         initiate(this);
         this.generateView();
+        // this.showLeve() = this.showLeve.bind(this);
     }
 
     generateView() {
         this.svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#app')
-            .append('svg')
-            .attr('height', 700)
+            .append('div')
+            // .attr('height', 700)
             .attr('width', '100%')
-            .attr('dx',10)
+            // .attr('dx',10)
             .classed('base-style', true);
+
         this.headerSvg = loadHeader(this.svg);
-        this.map = new _Map__WEBPACK_IMPORTED_MODULE_2__["default"](_data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3___default.a);
-        this.map.loadMap(this.svg);
+
+        this.map = new _Map__WEBPACK_IMPORTED_MODULE_2__["default"](this.svg, _data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3___default.a);
+
+        this.colorCodes = new _ColorCodes__WEBPACK_IMPORTED_MODULE_4__["default"](this.svg);
+    }
+
+    showLeve() {
+        console.log(this);
     }
 }
 
@@ -33792,7 +33867,10 @@ __webpack_require__.r(__webpack_exports__);
     map: 'map',
     mapCountry: 'map-country',
     temperatureBar: 'temperature-bar',
-    selected: 'selected'
+    selected: 'selected',
+    colorCodeUl: 'color-code-ul',
+    colorCodeli: 'color-code-li',
+    colorBox: 'color-box'
 });
 
 /***/ })

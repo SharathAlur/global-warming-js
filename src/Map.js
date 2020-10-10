@@ -2,32 +2,31 @@
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 import styles from './styles/styles';
-// import { CRITICAL_COLORS } from './constants';
 
-const initialize = (config, data) => {
+const initialize = (config, data, mapLoaded) => {
     config.svg = null;
     config.countriesSvg = {};
     config.emissionData = data;
+    config.mapLoaded = mapLoaded;
 }
 const projection = d3.geoMercator().translate([400, 350]).scale(120);
-    
-const selectCountry = path => d3.select(path).attr('aria-selected', true);
-
-const deselectCountry = path => d3.select(path).attr('aria-selected', false);
-
 
 export default class Map {
-    constructor(data) {
-        initialize(this, data);
+    constructor(svg, data, mapLoaded) {
+        initialize(this, data, mapLoaded);
+        this.loadMap = this.loadMap.bind(this);
         this.drawMap = this.drawMap.bind(this);
         this.loadDataForYear = this.loadDataForYear.bind(this);
         this.getEmissionLevel = this.getEmissionLevel.bind(this);
+        this.highlightLevel = this.highlightLevel.bind(this);
+
+        this.loadMap(svg);
     }
 
     getEmissionLevel(filteredData) {
         return ((d) => {
             const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
-            let emissionStatusColor = 0;
+            let emissionStatusColor;
             if (!countryEmission) {
                 emissionStatusColor = 0;
             } else if (countryEmission['Annual CO2'] < 50000000) {
@@ -45,18 +44,15 @@ export default class Map {
             } else if (countryEmission['Annual CO2'] < 40000000000) {
                 emissionStatusColor = 7;
             }
-            console.log(emissionStatusColor);
             return emissionStatusColor;
         })
     }
 
     loadMap(svg) {
         const mapSvg = svg
-            .append('g')
-            .classed(styles.map, true)
             .append('svg')
+            .classed(styles.map, true)
             .attr('y', 30)
-            .attr('height', 500);
         this.svg = mapSvg;
         d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
             .then(this.drawMap);
@@ -70,22 +66,27 @@ export default class Map {
             .append("path")
             .attr('aria-label', country => country.properties.name)
             .attr('aria-selected', false)
+            .attr('aria-level', 0)
             .classed(styles.mapCountry, true)
             .attr('d', d3.geoPath().projection(projection))
-            .on('mouseenter', d => selectCountry(d.path[0]))
-            .on('mouseleave', d => deselectCountry(d.path[0]));
-            this.loadDataForYear(2001);
+            .on('mouseenter', d => d3.select(d.path[0]).attr('aria-selected', true))
+            .on('mouseleave', d => d3.select(d.path[0]).attr('aria-selected', false));
+        this.mapLoaded();
     }
 
     loadDataForYear(year) {
         const filteredData = this.emissionData.filter(item => item.Year===year);
-        console.log(filteredData.find(item => {console.log(item);return item.Entity === "india";}))
-        const temp = d3.selectAll(`.${styles.mapCountry}`)//.each((item, b) => console.log('******',item))
 
-        temp.transition().duration(50).attr('aria-level', this.getEmissionLevel(filteredData));
-        // temp.each(tester)
-        // .data(filteredData)
-        // .enter()
-        // .attr('aria-level', (row) => {console.log(row); return 1});
+        d3.selectAll(`.${styles.mapCountry}`)
+            .transition()
+            .duration(50)
+            .attr('aria-level', 
+                this.getEmissionLevel(filteredData)
+            );
+    }
+
+    highlightLevel(level) {
+        this.svg.selectAll(`.${styles.mapCountry}`).attr('aria-selected', false);
+        this.svg.selectAll(`path[aria-level="${level}"]`).attr('aria-selected', true);
     }
 }
