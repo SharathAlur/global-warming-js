@@ -4,6 +4,8 @@ import styles from './styles/styles';
 import Map from './Map';
 import data from './data/CO2-Emissions-Country-Wise.csv';
 import ColorCodes from './ColorCodes';
+import Progress from './Progress';
+import { timeThursday } from 'd3';
 
 const initiate = (config) => {
     config.svg = null;
@@ -16,8 +18,7 @@ const initiate = (config) => {
 const loadHeader = (svg) => {
     const headerSvg = svg.append("svg")
         .classed(styles.header, true)
-        .append('text');
-    headerSvg
+        .append('text')
         .attr('x', 10)
         .attr('y', 25)
         .attr('width', '100%')
@@ -30,6 +31,7 @@ export default class Main {
         initiate(this);
         this.generateView = this.generateView.bind(this);
         this.mapLoaded = this.mapLoaded.bind(this);
+        this.setYear = this.setYear.bind(this);
 
         this.generateView();
     }
@@ -48,6 +50,12 @@ export default class Main {
     }
 
     mapLoaded() {
-        this.map.loadDataForYear(2017);
+        // Add progress bar
+        this.progressBarSvg = new Progress(this.svg, this.setYear);
+    }
+
+    setYear(year) {
+        this.headerSvg.transition().text(`Cummulative CO2 emissions, ${year}`)
+        this.map.loadDataForYear(year);
     }
 }

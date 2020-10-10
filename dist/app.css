@@ -1,5 +1,6 @@
 svg {
   width: 100%;
+  height: auto;
 }
 .header {
   font-family: 'Merriweather', serif;
@@ -46,7 +47,7 @@ svg {
   display: flex;
   justify-content: left;
   align-content: center;
-  margin-top: 20px;
+  margin: 0;
 }
 .color-code-ul .color-code-li {
   display: flex;
@@ -63,7 +64,8 @@ svg {
 }
 .color-code-ul .color-box[aria-level="0"] {
   background-color: #f1f1f1;
-  margin-right: 20px;
+  margin-right: 40px;
+  width: 40px;
 }
 .color-code-ul .color-box[aria-level="1"] {
   background-color: #fdf4e3;
@@ -92,6 +94,20 @@ svg {
 .color-code-ul .color-box[aria-level="7"] {
   background-color: #942412;
   margin-right: 0;
+}
+.color-code-div {
+  margin: 20px;
+}
+.color-code-div .color-code-ul,
+.color-code-div .range-label {
+  width: 100px;
+  text-align: center;
+  font-size: 12px;
+}
+.color-code-div .no-data-label {
+  width: 35px;
+  text-align: center;
+  font-size: 12px;
 }
 
 
