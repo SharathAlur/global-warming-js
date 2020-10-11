@@ -109,6 +109,20 @@ svg {
   text-align: center;
   font-size: 12px;
 }
+.progress-div {
+  margin: 50px;
+  display: flex;
+}
+.progress-div .progress-bar {
+  width: 800px;
+}
+.progress-div .play-pause-btn {
+  width: 25px;
+  cursor: pointer;
+}
+.progress-div .hide-icon {
+  display: none;
+}
 
 
 /*# sourceMappingURL=app.css.map*/

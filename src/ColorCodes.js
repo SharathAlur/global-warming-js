@@ -1,7 +1,5 @@
 import * as d3 from 'd3';
-import { CRITICAL_COLORS } from './constants';
 import styles from './styles/styles';
-import { data } from 'autoprefixer';
 
 export default class ColorCodes {
     constructor(svg, highlightLevel) {
@@ -16,13 +14,13 @@ export default class ColorCodes {
         const ranges = ['no data','0 t', '50 million t', '500 million t', '5 billion t', '50 billion t', '100 billion t', '250 billion t', '400 billion t']
         this.textSvg = local.append('ul').classed(styles.colorCodeUl, true);
         this.textSvg.selectAll(styles.rangeLabel)
-        .data(ranges)
-        .enter()
-        .append('li').classed(styles.colorCodeli, true)
-        .append('text')
-        .classed(styles.rangeLabel, true)
-        .classed(styles.noDataLabel, d => d === 'no data')
-        .text( d => d);
+            .data(ranges)
+            .enter()
+            .append('li').classed(styles.colorCodeli, true)
+            .append('text')
+            .classed(styles.rangeLabel, true)
+            .classed(styles.noDataLabel, d => d === 'no data')
+            .text( d => d);
 
         this.colorsSvg = local.append('ul').classed(styles.colorCodeUl, true);
         d3.range(0, 8, 1).map((value) => {

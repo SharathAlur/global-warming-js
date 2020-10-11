@@ -10,4 +10,8 @@ export default {
     rangeLabel: 'range-label',
     colorCodeDiv: 'color-code-div',
     noDataLabel: 'no-data-label',
+    progressDiv: 'progress-div',
+    progressBar: 'progress-bar',
+    progressButton: 'play-pause-btn',
+    hideIcon: 'hide-icon'
 }
