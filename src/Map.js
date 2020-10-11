@@ -2,6 +2,7 @@
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
 import styles from './styles/styles';
+import { getEmissionLevel, getEmissionValue, convertToText } from './helper';
 
 const initialize = (config, data, mapLoaded) => {
     config.svg = null;
@@ -11,41 +12,45 @@ const initialize = (config, data, mapLoaded) => {
 }
 const projection = d3.geoMercator().translate([400, 350]).scale(120);
 
+const mouseEnter = (d) => {
+    const countrySvg = d.path[0];
+    const country = countrySvg.getAttribute('aria-label');
+    const emission = countrySvg.getAttribute('aria-valuenow') ;
+    d3.select(countrySvg).attr('aria-selected', true);
+    const tooltip = d3.select(`.${styles.mapToolTip}`)
+        .style('opacity', '0.9')
+        .style('left',`${d.pageX}px`)
+        .style('top',`${d.pageY}px`);
+        
+    tooltip.append('text')
+        .style('width', '100%')
+        .text(country);
+
+    tooltip.append('text')
+        .text(convertToText(emission))
+        .style('margin-top', '10px')
+        .style('font-size', '12px')
+        .attr('y', '1rem');
+}
+
+const mouseExit = (d) => {
+    d3.select(d.path[0]).attr('aria-selected', false);
+    d3.select(`.${styles.mapToolTip}`)
+        .style('opacity', '0')
+        .selectAll('*')
+        .remove();
+
+}
+
 export default class Map {
     constructor(svg, data, mapLoaded) {
         initialize(this, data, mapLoaded);
         this.loadMap = this.loadMap.bind(this);
         this.drawMap = this.drawMap.bind(this);
         this.loadDataForYear = this.loadDataForYear.bind(this);
-        this.getEmissionLevel = this.getEmissionLevel.bind(this);
         this.highlightLevel = this.highlightLevel.bind(this);
 
         this.loadMap(svg);
-    }
-
-    getEmissionLevel(filteredData) {
-        return ((d) => {
-            const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
-            let emissionStatusColor;
-            if (!countryEmission) {
-                emissionStatusColor = 0;
-            } else if (countryEmission['Annual CO2'] < 50000000) {
-                emissionStatusColor = 1;
-            } else if (countryEmission['Annual CO2'] < 500000000) {
-                emissionStatusColor = 2;
-            } else if (countryEmission['Annual CO2'] < 5000000000) {
-                emissionStatusColor = 3;
-            } else if (countryEmission['Annual CO2'] < 50000000000) {
-                emissionStatusColor = 4;
-            } else if (countryEmission['Annual CO2'] < 10000000000) {
-                emissionStatusColor = 5;
-            } else if (countryEmission['Annual CO2'] < 25000000000) {
-                emissionStatusColor = 6;
-            } else if (countryEmission['Annual CO2'] < 40000000000) {
-                emissionStatusColor = 7;
-            }
-            return emissionStatusColor;
-        })
     }
 
     loadMap(svg) {
@@ -69,8 +74,8 @@ export default class Map {
             .attr('aria-level', 0)
             .classed(styles.mapCountry, true)
             .attr('d', d3.geoPath().projection(projection))
-            .on('mouseenter', d => d3.select(d.path[0]).attr('aria-selected', true))
-            .on('mouseleave', d => d3.select(d.path[0]).attr('aria-selected', false));
+            .on('mouseenter', mouseEnter)
+            .on('mouseleave',mouseExit)
         this.mapLoaded();
     }
 
@@ -81,8 +86,9 @@ export default class Map {
             .transition()
             .duration(50)
             .attr('aria-level', 
-                this.getEmissionLevel(filteredData)
-            );
+                getEmissionLevel(filteredData)
+            )
+            .attr('aria-valuenow', getEmissionValue(filteredData));
     }
 
     highlightLevel(level) {

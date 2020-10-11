@@ -13,5 +13,6 @@ export default {
     progressDiv: 'progress-div',
     progressBar: 'progress-bar',
     progressButton: 'play-pause-btn',
-    hideIcon: 'hide-icon'
+    hideIcon: 'hide-icon',
+    mapToolTip: 'map-tooltip',
 }

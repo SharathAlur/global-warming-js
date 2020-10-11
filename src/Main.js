@@ -5,7 +5,6 @@ import Map from './Map';
 import data from './data/CO2-Emissions-Country-Wise.csv';
 import ColorCodes from './ColorCodes';
 import Progress from './Progress';
-import { timeThursday } from 'd3';
 
 const initiate = (config) => {
     config.svg = null;
@@ -42,11 +41,13 @@ export default class Main {
             .attr('width', '100%')
             .classed('base-style', true);
 
+            d3.select('#app').append('div').classed(styles.mapToolTip, true);
         this.headerSvg = loadHeader(this.svg);
 
         this.map = new Map(this.svg, data, this.mapLoaded);
 
         this.colorCodes = new ColorCodes(this.svg, this.map.highlightLevel);
+
     }
 
     mapLoaded() {

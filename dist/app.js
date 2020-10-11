@@ -33639,6 +33639,12 @@ const initialize = (config, data, mapLoaded) => {
 }
 const projection = d3__WEBPACK_IMPORTED_MODULE_0__["geoMercator"]().translate([400, 350]).scale(120);
 
+const mouseEnter = (d) => {
+    console.log(d)
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', true);
+    // d3.select(d.path[0]).append('text').text('a new tooltip');
+}
+
 class Map {
     constructor(svg, data, mapLoaded) {
         initialize(this, data, mapLoaded);
@@ -33697,7 +33703,7 @@ class Map {
             .attr('aria-level', 0)
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry, true)
             .attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["geoPath"]().projection(projection))
-            .on('mouseenter', d => d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', true))
+            .on('mouseenter', d => mouseEnter)
             .on('mouseleave', d => d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false));
         this.mapLoaded();
     }
@@ -33756,7 +33762,6 @@ class Progress {
         this.buttonClick = this.buttonClick.bind(this);
 
         this.draw(svg);
-        this.runTimer();
     }
 
     buttonClick() {
