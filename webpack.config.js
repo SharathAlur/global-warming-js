@@ -1,22 +1,20 @@
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
+    mode: "development",
+    devtool: 'source-map', // any "source-map"-like devtool is possible
     // 1
-    entry: './src/index.js',
     entry: {
-      app: './src/index.js',
+      app: './src/index.js'
     },
  
     // 2
     output: {
       path: __dirname + '/dist',
       publicPath: '/',
-      filename: 'bundle.js'
+      filename: `[name].js`,
+      library: "GlobalWarming",
     },
-    // output: {
-    //   filename: 'bundle.js',
-    //   filename: '[name].bundle.js',
-    //    path: path.resolve(__dirname, 'dist'),
-    //  },
     // 3
     devServer: {
       contentBase: './dist'
@@ -25,7 +23,16 @@ module.exports = {
       rules: [
         {
           test: /\.less$/,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                publicPath: '/public/path/to/',
+              },
+            },
+            'css-loader',
+            'less-loader'
+          ]
         },
         {
           test: /\.csv$/,
@@ -38,4 +45,12 @@ module.exports = {
         }
       ],
     },
+    plugins: [
+      new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+      }),
+    ],
   };

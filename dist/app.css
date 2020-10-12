@@ -1,0 +1,128 @@
+svg {
+  width: 100%;
+  height: auto;
+}
+.header {
+  font-family: 'Merriweather', serif;
+  font-size: 30px;
+  height: 30px;
+}
+.map {
+  padding-top: 30px;
+  height: 500px;
+}
+.map-country {
+  margin: 0;
+  fill: #f1f1f1;
+}
+.map-country[aria-selected="true"] {
+  stroke-width: 2px;
+  stroke: black;
+}
+.map-country[aria-level="0"] {
+  fill: #f1f1f1;
+}
+.map-country[aria-level="1"] {
+  fill: #fdf4e3;
+}
+.map-country[aria-level="2"] {
+  fill: #f7d7ad;
+}
+.map-country[aria-level="3"] {
+  fill: #f3c498;
+}
+.map-country[aria-level="4"] {
+  fill: #eb9f6f;
+}
+.map-country[aria-level="5"] {
+  fill: #e17a5d;
+}
+.map-country[aria-level="6"] {
+  fill: #ca4a32;
+}
+.map-country[aria-level="7"] {
+  fill: #942412;
+}
+.color-code-ul {
+  display: flex;
+  justify-content: left;
+  align-content: center;
+  margin: 0;
+}
+.color-code-ul .color-code-li {
+  display: flex;
+  align-items: center;
+}
+.color-code-ul .color-box {
+  height: 10px;
+  width: 100px;
+  align-self: flex-start;
+  align-content: center;
+  padding: 0;
+  background-color: #f1f1f1;
+  border: 1px solid gray;
+}
+.color-code-ul .color-box[aria-level="0"] {
+  background-color: #f1f1f1;
+  margin-right: 40px;
+  width: 40px;
+}
+.color-code-ul .color-box[aria-level="1"] {
+  background-color: #fdf4e3;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="2"] {
+  background-color: #f7d7ad;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="3"] {
+  background-color: #f3c498;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="4"] {
+  background-color: #eb9f6f;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="5"] {
+  background-color: #e17a5d;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="6"] {
+  background-color: #ca4a32;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="7"] {
+  background-color: #942412;
+  margin-right: 0;
+}
+.color-code-div {
+  margin: 20px;
+}
+.color-code-div .color-code-ul,
+.color-code-div .range-label {
+  width: 100px;
+  text-align: center;
+  font-size: 12px;
+}
+.color-code-div .no-data-label {
+  width: 35px;
+  text-align: center;
+  font-size: 12px;
+}
+.progress-div {
+  margin: 50px;
+  display: flex;
+}
+.progress-div .progress-bar {
+  width: 800px;
+}
+.progress-div .play-pause-btn {
+  width: 25px;
+  cursor: pointer;
+}
+.progress-div .hide-icon {
+  display: none;
+}
+
+
+/*# sourceMappingURL=app.css.map*/

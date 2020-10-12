@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+"use strict";
 import './styles/index.less';
 import Main from './main';
 
