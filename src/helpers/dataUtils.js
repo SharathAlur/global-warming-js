@@ -1,3 +1,5 @@
+export const ranges = [0, 50000000, 500000000, 5000000000, 50000000000, 10000000000, 25000000000, 40000000000];
+
 export const convertToText = (value) => {
     if (!value) {
         return 'No Data';
@@ -17,29 +19,27 @@ export const convertToText = (value) => {
     return `${temp.toFixed(2)} tonnes`;
 }
 
+export const getLevel = (value) => {
+    if (value < ranges[1]) {
+        return 1;
+    } else if (value < ranges[2]) {
+        return 2;
+    } else if (value < ranges[3]) {
+        return 3;
+    } else if (value < ranges[4]) {
+        return 4;
+    } else if (value < ranges[5]) {
+        return 5;
+    } else if (value < ranges[6]) {
+        return 6;
+    } 
+    return 7;
+}
 
 export const getEmissionLevel = (filteredData) => {
     return ((d) => {
         const countryEmission = filteredData.find(data => d.properties.name.includes(data.Entity));
-        let emissionStatus;
-        if (!countryEmission) {
-            emissionStatus = 0;
-        } else if (countryEmission['Annual CO2'] < 50000000) {
-            emissionStatus = 1;
-        } else if (countryEmission['Annual CO2'] < 500000000) {
-            emissionStatus = 2;
-        } else if (countryEmission['Annual CO2'] < 5000000000) {
-            emissionStatus = 3;
-        } else if (countryEmission['Annual CO2'] < 50000000000) {
-            emissionStatus = 4;
-        } else if (countryEmission['Annual CO2'] < 10000000000) {
-            emissionStatus = 5;
-        } else if (countryEmission['Annual CO2'] < 25000000000) {
-            emissionStatus = 6;
-        } else if (countryEmission['Annual CO2'] < 40000000000) {
-            emissionStatus = 7;
-        }
-        return emissionStatus;
+        return countryEmission ? getLevel(countryEmission['Annual CO2']) : 0;
     })
 }
 

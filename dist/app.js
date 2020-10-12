@@ -33626,7 +33626,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
 /* harmony import */ var topojson__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! topojson */ "./node_modules/topojson/index.js");
 /* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./styles/styles */ "./src/styles/styles.js");
-/* harmony import */ var _helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helper */ "./src/helper.js");
+/* harmony import */ var _helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helpers/dataUtils */ "./src/helpers/dataUtils.js");
+/* harmony import */ var _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./helpers/tooltip */ "./src/helpers/tooltip.js");
+
 
 
 
@@ -33640,36 +33642,6 @@ const initialize = (config, data, mapLoaded) => {
     config.mapLoaded = mapLoaded;
 }
 const projection = d3__WEBPACK_IMPORTED_MODULE_0__["geoMercator"]().translate([400, 350]).scale(120);
-
-const mouseEnter = (d) => {
-    const countrySvg = d.path[0];
-    const country = countrySvg.getAttribute('aria-label');
-    const emission = countrySvg.getAttribute('aria-valuenow') ;
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](countrySvg).attr('aria-selected', true);
-    const tooltip = d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
-        .style('opacity', '0.9')
-        .style('left',`${d.pageX}px`)
-        .style('top',`${d.pageY}px`);
-        
-    tooltip.append('text')
-        .style('width', '100%')
-        .text(country);
-
-    tooltip.append('text')
-        .text(Object(_helper__WEBPACK_IMPORTED_MODULE_3__["convertToText"])(emission))
-        .style('margin-top', '10px')
-        .style('font-size', '12px')
-        .attr('y', '1rem');
-}
-
-const mouseExit = (d) => {
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false);
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
-        .style('opacity', '0')
-        .selectAll('*')
-        .remove();
-
-}
 
 class Map {
     constructor(svg, data, mapLoaded) {
@@ -33703,21 +33675,23 @@ class Map {
             .attr('aria-level', 0)
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry, true)
             .attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["geoPath"]().projection(projection))
-            .on('mouseenter', mouseEnter)
-            .on('mouseleave',mouseExit)
+            .on('mouseenter', _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseEnter"])
+            .on('mouseleave',_helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseExit"])
+            .on('mousemove',_helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseMove"])
         this.mapLoaded();
     }
 
     loadDataForYear(year) {
+        console.log(this.svg.popup())
         const filteredData = this.emissionData.filter(item => item.Year===year);
 
         d3__WEBPACK_IMPORTED_MODULE_0__["selectAll"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry}`)
             .transition()
             .duration(50)
             .attr('aria-level', 
-                Object(_helper__WEBPACK_IMPORTED_MODULE_3__["getEmissionLevel"])(filteredData)
+                Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__["getEmissionLevel"])(filteredData)
             )
-            .attr('aria-valuenow', Object(_helper__WEBPACK_IMPORTED_MODULE_3__["getEmissionValue"])(filteredData));
+            .attr('aria-valuenow', Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__["getEmissionValue"])(filteredData));
     }
 
     highlightLevel(level) {
@@ -33844,18 +33818,22 @@ module.exports = [{"Entity":"Afghanistan","Code":"AFG","Year":1949,"Annual CO2":
 
 /***/ }),
 
-/***/ "./src/helper.js":
-/*!***********************!*\
-  !*** ./src/helper.js ***!
-  \***********************/
-/*! exports provided: convertToText, getEmissionLevel, getEmissionValue */
+/***/ "./src/helpers/dataUtils.js":
+/*!**********************************!*\
+  !*** ./src/helpers/dataUtils.js ***!
+  \**********************************/
+/*! exports provided: ranges, convertToText, getLevel, getEmissionLevel, getEmissionValue */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ranges", function() { return ranges; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertToText", function() { return convertToText; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLevel", function() { return getLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmissionLevel", function() { return getEmissionLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmissionValue", function() { return getEmissionValue; });
+const ranges = [0, 50000000, 500000000, 5000000000, 50000000000, 10000000000, 25000000000, 40000000000];
+
 const convertToText = (value) => {
     if (!value) {
         return 'No Data';
@@ -33875,29 +33853,27 @@ const convertToText = (value) => {
     return `${temp.toFixed(2)} tonnes`;
 }
 
+const getLevel = (value) => {
+    if (value < ranges[1]) {
+        return 1;
+    } else if (value < ranges[2]) {
+        return 2;
+    } else if (value < ranges[3]) {
+        return 3;
+    } else if (value < ranges[4]) {
+        return 4;
+    } else if (value < ranges[5]) {
+        return 5;
+    } else if (value < ranges[6]) {
+        return 6;
+    } 
+    return 7;
+}
 
 const getEmissionLevel = (filteredData) => {
     return ((d) => {
         const countryEmission = filteredData.find(data => d.properties.name.includes(data.Entity));
-        let emissionStatus;
-        if (!countryEmission) {
-            emissionStatus = 0;
-        } else if (countryEmission['Annual CO2'] < 50000000) {
-            emissionStatus = 1;
-        } else if (countryEmission['Annual CO2'] < 500000000) {
-            emissionStatus = 2;
-        } else if (countryEmission['Annual CO2'] < 5000000000) {
-            emissionStatus = 3;
-        } else if (countryEmission['Annual CO2'] < 50000000000) {
-            emissionStatus = 4;
-        } else if (countryEmission['Annual CO2'] < 10000000000) {
-            emissionStatus = 5;
-        } else if (countryEmission['Annual CO2'] < 25000000000) {
-            emissionStatus = 6;
-        } else if (countryEmission['Annual CO2'] < 40000000000) {
-            emissionStatus = 7;
-        }
-        return emissionStatus;
+        return countryEmission ? getLevel(countryEmission['Annual CO2']) : 0;
     })
 }
 
@@ -33906,6 +33882,63 @@ const getEmissionValue = (filteredData) => {
         const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
         return countryEmission? countryEmission['Annual CO2'] : undefined;
     })
+}
+
+/***/ }),
+
+/***/ "./src/helpers/tooltip.js":
+/*!********************************!*\
+  !*** ./src/helpers/tooltip.js ***!
+  \********************************/
+/*! exports provided: mouseEnter, mouseExit, mouseMove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mouseEnter", function() { return mouseEnter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mouseExit", function() { return mouseExit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mouseMove", function() { return mouseMove; });
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
+/* harmony import */ var _dataUtils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dataUtils */ "./src/helpers/dataUtils.js");
+/* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../styles/styles */ "./src/styles/styles.js");
+
+
+
+
+const mouseEnter = (d) => {
+    const countrySvg = d.path[0];
+    const country = countrySvg.getAttribute('aria-label');
+    const emission = countrySvg.getAttribute('aria-valuenow') ;
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](countrySvg).attr('aria-selected', true);
+    const tooltip = d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
+        .style('opacity', '0.9')
+        .style('left',`${d.pageX}px`)
+        .style('top',`${d.pageY}px`);
+        
+    tooltip.append('text')
+        .style('width', '100%')
+        .text(country);
+
+    tooltip.append('text')
+        .text(Object(_dataUtils__WEBPACK_IMPORTED_MODULE_1__["convertToText"])(emission))
+        .style('margin-top', '10px')
+        .style('font-size', '12px')
+        .attr('y', '1rem');
+}
+
+const mouseExit = (d) => {
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false);
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
+        .style('opacity', '0')
+        .selectAll('*')
+        .remove();
+
+}
+
+const mouseMove = (d) => {
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
+        .style('left',`${d.pageX}px`)
+        .style('top',`${d.pageY}px`);
 }
 
 /***/ }),
