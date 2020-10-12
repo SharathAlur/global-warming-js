@@ -118,10 +118,26 @@ svg {
 }
 .progress-div .play-pause-btn {
   width: 25px;
+  height: 25px;
   cursor: pointer;
 }
 .progress-div .hide-icon {
   display: none;
+}
+.map-tooltip {
+  position: absolute;
+  text-align: center;
+  width: 180px;
+  height: 80px;
+  padding: 2px;
+  font-family: 'Merriweather', serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  flex-flow: column;
 }
 
 

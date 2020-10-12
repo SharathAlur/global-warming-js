@@ -33626,6 +33626,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
 /* harmony import */ var topojson__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! topojson */ "./node_modules/topojson/index.js");
 /* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./styles/styles */ "./src/styles/styles.js");
+/* harmony import */ var _helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helper */ "./src/helper.js");
+
 
 
 
@@ -33640,9 +33642,33 @@ const initialize = (config, data, mapLoaded) => {
 const projection = d3__WEBPACK_IMPORTED_MODULE_0__["geoMercator"]().translate([400, 350]).scale(120);
 
 const mouseEnter = (d) => {
-    console.log(d)
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', true);
-    // d3.select(d.path[0]).append('text').text('a new tooltip');
+    const countrySvg = d.path[0];
+    const country = countrySvg.getAttribute('aria-label');
+    const emission = countrySvg.getAttribute('aria-valuenow') ;
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](countrySvg).attr('aria-selected', true);
+    const tooltip = d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
+        .style('opacity', '0.9')
+        .style('left',`${d.pageX}px`)
+        .style('top',`${d.pageY}px`);
+        
+    tooltip.append('text')
+        .style('width', '100%')
+        .text(country);
+
+    tooltip.append('text')
+        .text(Object(_helper__WEBPACK_IMPORTED_MODULE_3__["convertToText"])(emission))
+        .style('margin-top', '10px')
+        .style('font-size', '12px')
+        .attr('y', '1rem');
+}
+
+const mouseExit = (d) => {
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false);
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
+        .style('opacity', '0')
+        .selectAll('*')
+        .remove();
+
 }
 
 class Map {
@@ -33651,35 +33677,9 @@ class Map {
         this.loadMap = this.loadMap.bind(this);
         this.drawMap = this.drawMap.bind(this);
         this.loadDataForYear = this.loadDataForYear.bind(this);
-        this.getEmissionLevel = this.getEmissionLevel.bind(this);
         this.highlightLevel = this.highlightLevel.bind(this);
 
         this.loadMap(svg);
-    }
-
-    getEmissionLevel(filteredData) {
-        return ((d) => {
-            const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
-            let emissionStatusColor;
-            if (!countryEmission) {
-                emissionStatusColor = 0;
-            } else if (countryEmission['Annual CO2'] < 50000000) {
-                emissionStatusColor = 1;
-            } else if (countryEmission['Annual CO2'] < 500000000) {
-                emissionStatusColor = 2;
-            } else if (countryEmission['Annual CO2'] < 5000000000) {
-                emissionStatusColor = 3;
-            } else if (countryEmission['Annual CO2'] < 50000000000) {
-                emissionStatusColor = 4;
-            } else if (countryEmission['Annual CO2'] < 10000000000) {
-                emissionStatusColor = 5;
-            } else if (countryEmission['Annual CO2'] < 25000000000) {
-                emissionStatusColor = 6;
-            } else if (countryEmission['Annual CO2'] < 40000000000) {
-                emissionStatusColor = 7;
-            }
-            return emissionStatusColor;
-        })
     }
 
     loadMap(svg) {
@@ -33703,8 +33703,8 @@ class Map {
             .attr('aria-level', 0)
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry, true)
             .attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["geoPath"]().projection(projection))
-            .on('mouseenter', d => mouseEnter)
-            .on('mouseleave', d => d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false));
+            .on('mouseenter', mouseEnter)
+            .on('mouseleave',mouseExit)
         this.mapLoaded();
     }
 
@@ -33715,8 +33715,9 @@ class Map {
             .transition()
             .duration(50)
             .attr('aria-level', 
-                this.getEmissionLevel(filteredData)
-            );
+                Object(_helper__WEBPACK_IMPORTED_MODULE_3__["getEmissionLevel"])(filteredData)
+            )
+            .attr('aria-valuenow', Object(_helper__WEBPACK_IMPORTED_MODULE_3__["getEmissionValue"])(filteredData));
     }
 
     highlightLevel(level) {
@@ -33843,6 +33844,72 @@ module.exports = [{"Entity":"Afghanistan","Code":"AFG","Year":1949,"Annual CO2":
 
 /***/ }),
 
+/***/ "./src/helper.js":
+/*!***********************!*\
+  !*** ./src/helper.js ***!
+  \***********************/
+/*! exports provided: convertToText, getEmissionLevel, getEmissionValue */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertToText", function() { return convertToText; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmissionLevel", function() { return getEmissionLevel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmissionValue", function() { return getEmissionValue; });
+const convertToText = (value) => {
+    if (!value) {
+        return 'No Data';
+    }
+    let temp = value/1000000000;
+    if (temp > 1) {
+        return `${temp.toFixed(2)} billion tonnes`;
+    }
+    temp = value/1000000;
+    if (temp > 1) {
+        return `${temp.toFixed(2)} million tonnes`;
+    }
+    temp = value/1000;
+    if (temp > 1) {
+        return `${temp.toFixed(2)} thousand tonnes`;
+    }
+    return `${temp.toFixed(2)} tonnes`;
+}
+
+
+const getEmissionLevel = (filteredData) => {
+    return ((d) => {
+        const countryEmission = filteredData.find(data => d.properties.name.includes(data.Entity));
+        let emissionStatus;
+        if (!countryEmission) {
+            emissionStatus = 0;
+        } else if (countryEmission['Annual CO2'] < 50000000) {
+            emissionStatus = 1;
+        } else if (countryEmission['Annual CO2'] < 500000000) {
+            emissionStatus = 2;
+        } else if (countryEmission['Annual CO2'] < 5000000000) {
+            emissionStatus = 3;
+        } else if (countryEmission['Annual CO2'] < 50000000000) {
+            emissionStatus = 4;
+        } else if (countryEmission['Annual CO2'] < 10000000000) {
+            emissionStatus = 5;
+        } else if (countryEmission['Annual CO2'] < 25000000000) {
+            emissionStatus = 6;
+        } else if (countryEmission['Annual CO2'] < 40000000000) {
+            emissionStatus = 7;
+        }
+        return emissionStatus;
+    })
+}
+
+const getEmissionValue = (filteredData) => {
+    return ((d) => {
+        const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
+        return countryEmission? countryEmission['Annual CO2'] : undefined;
+    })
+}
+
+/***/ }),
+
 /***/ "./src/index.js":
 /*!**********************!*\
   !*** ./src/index.js ***!
@@ -33894,7 +33961,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 const initiate = (config) => {
     config.svg = null;
     config.headerSvg = null;
@@ -33930,11 +33996,13 @@ class Main {
             .attr('width', '100%')
             .classed('base-style', true);
 
+            d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#app').append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].mapToolTip, true);
         this.headerSvg = loadHeader(this.svg);
 
         this.map = new _Map__WEBPACK_IMPORTED_MODULE_2__["default"](this.svg, _data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3___default.a, this.mapLoaded);
 
         this.colorCodes = new _ColorCodes__WEBPACK_IMPORTED_MODULE_4__["default"](this.svg, this.map.highlightLevel);
+
     }
 
     mapLoaded() {
@@ -33985,7 +34053,8 @@ __webpack_require__.r(__webpack_exports__);
     progressDiv: 'progress-div',
     progressBar: 'progress-bar',
     progressButton: 'play-pause-btn',
-    hideIcon: 'hide-icon'
+    hideIcon: 'hide-icon',
+    mapToolTip: 'map-tooltip',
 });
 
 /***/ })

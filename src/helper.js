@@ -20,7 +20,7 @@ export const convertToText = (value) => {
 
 export const getEmissionLevel = (filteredData) => {
     return ((d) => {
-        const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
+        const countryEmission = filteredData.find(data => d.properties.name.includes(data.Entity));
         let emissionStatus;
         if (!countryEmission) {
             emissionStatus = 0;
