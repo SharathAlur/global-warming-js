@@ -33572,41 +33572,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
 /* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/styles */ "./src/styles/styles.js");
 /* harmony import */ var _helpers_dataUtils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./helpers/dataUtils */ "./src/helpers/dataUtils.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 
 
 
-const colorCodes = (svg, highlightLevel) => {
-    const local = svg.append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeDiv, true);
 
-    // Add range text
-    const colorRanges = ['no data', ..._helpers_dataUtils__WEBPACK_IMPORTED_MODULE_2__["ranges"]]
-    const textSvg = local.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeUl, true);
-    textSvg.selectAll(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].rangeLabel)
-        .data(colorRanges)
-        .enter()
-        .append('li').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeli, true)
-        .append('text')
-        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].rangeLabel, true)
-        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].noDataLabel, d => d === 'no data')
-        .text( d => Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_2__["convertToText"])(d));
+var colorCodes = function colorCodes(svg, highlightLevel) {
+  var local = svg.append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeDiv, true); // Add range text
 
-    // Add color ranges
-    const colorsSvg = local.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeUl, true);
-    d3__WEBPACK_IMPORTED_MODULE_0__["range"](0, 8, 1).map((value) => {
-        colorsSvg.append('li')
-        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeli, true)
-        .append('div')
-        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorBox, true)
-        .attr('width', 100)
-        .attr('height', 10)
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('aria-level', value)
-        .on('mouseenter', d => highlightLevel(d.path[0].getAttribute('aria-level')))
-        .on('mouseleave', d => highlightLevel(-1));
+  var colorRanges = ['no data'].concat(_toConsumableArray(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_2__["ranges"]));
+  var textSvg = local.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeUl, true);
+  textSvg.selectAll(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].rangeLabel).data(colorRanges).enter().append('li').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeli, true).append('text').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].rangeLabel, true).classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].noDataLabel, function (d) {
+    return d === 'no data';
+  }).text(function (d) {
+    return Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_2__["convertToText"])(d);
+  }); // Add color ranges
+
+  var colorsSvg = local.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeUl, true);
+  d3__WEBPACK_IMPORTED_MODULE_0__["range"](0, 8, 1).map(function (value) {
+    colorsSvg.append('li').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeli, true).append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorBox, true).attr('width', 100).attr('height', 10).attr('x', 0).attr('y', 0).attr('aria-level', value).on('mouseenter', function (d) {
+      var event = new Event('showLevel');
+      d.path[0].dispatchEvent(event);
+      console.log('---------', event);
+      highlightLevel(d.path[0].getAttribute('aria-level'));
+    }).on('mouseleave', function (d) {
+      return highlightLevel(-1);
     });
-}
+  });
+};
 
 /* harmony default export */ __webpack_exports__["default"] = (colorCodes);
 
@@ -33629,83 +33633,86 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./helpers/tooltip */ "./src/helpers/tooltip.js");
 
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
 
 
 
-const initialize = (config, data, mapLoaded) => {
-    config.svg = null;
-    config.countriesSvg = {};
-    config.emissionData = data;
-    config.mapLoaded = mapLoaded;
-}
-const projection = d3__WEBPACK_IMPORTED_MODULE_0__["geoMercator"]().translate([400, 350]).scale(120);
 
+
+var initialize = function initialize(config, data, mapLoaded) {
+  config.svg = null;
+  config.countriesSvg = {};
+  config.emissionData = data;
+  config.mapLoaded = mapLoaded;
+};
+
+var projection = d3__WEBPACK_IMPORTED_MODULE_0__["geoMercator"]().translate([400, 350]).scale(120);
 /**
  * Creates Global Map.
  * Has helper functions to load the emission data to the map.
  */
-class Map {
-    constructor(svg, data, mapLoaded) {
-        initialize(this, data, mapLoaded);
-        this.loadMap = this.loadMap.bind(this);
-        this.drawMap = this.drawMap.bind(this);
-        this.loadDataForYear = this.loadDataForYear.bind(this);
-        this.highlightLevel = this.highlightLevel.bind(this);
 
-        this.loadMap(svg);
+var Map = /*#__PURE__*/function () {
+  function Map(svg, data, mapLoaded) {
+    _classCallCheck(this, Map);
+
+    initialize(this, data, mapLoaded);
+    this.loadMap = this.loadMap.bind(this);
+    this.drawMap = this.drawMap.bind(this);
+    this.loadDataForYear = this.loadDataForYear.bind(this);
+    this.highlightLevel = this.highlightLevel.bind(this);
+    this.loadMap(svg);
+    document.addEventListener('showLevel', function (a, b, c) {
+      return console.log('event....', a, b, c);
+    });
+  } // Load initial map
+
+
+  _createClass(Map, [{
+    key: "loadMap",
+    value: function loadMap(svg) {
+      var mapSvg = svg.append('svg').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].map, true).attr('y', 30);
+      this.svg = mapSvg;
+      d3__WEBPACK_IMPORTED_MODULE_0__["json"]('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(this.drawMap);
+    } // Draws map
+
+  }, {
+    key: "drawMap",
+    value: function drawMap(data) {
+      var countries = topojson__WEBPACK_IMPORTED_MODULE_1__["feature"](data, data.objects.countries).features;
+      this.svg.selectAll('.country').data(countries).enter().append("path").attr('aria-label', function (country) {
+        return country.properties.name;
+      }).attr('aria-selected', false).attr('aria-level', 0).attr('aria-valuenow', undefined).classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry, true).attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["geoPath"]().projection(projection)).on('mouseenter', _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseEnter"]).on('mouseleave', _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseExit"]).on('mousemove', _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseMove"]);
+      this.mapLoaded();
+    } // Loads the data for the year passed as argument
+
+  }, {
+    key: "loadDataForYear",
+    value: function loadDataForYear(year) {
+      var filteredData = this.emissionData.filter(function (item) {
+        return item.Year === year;
+      });
+      d3__WEBPACK_IMPORTED_MODULE_0__["selectAll"](".".concat(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry)).transition().duration(50).attr('aria-level', Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__["getEmissionLevel"])(filteredData)).attr('aria-valuenow', Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__["getEmissionValue"])(filteredData));
+    } // Highlights the selected emission level
+
+  }, {
+    key: "highlightLevel",
+    value: function highlightLevel(level) {
+      this.svg.selectAll(".".concat(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry)).attr('aria-selected', false);
+      this.svg.selectAll("path[aria-level=\"".concat(level, "\"]")).attr('aria-selected', true);
     }
+  }]);
 
-    // Load initial map
-    loadMap(svg) {
-        const mapSvg = svg
-            .append('svg')
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].map, true)
-            .attr('y', 30)
-        this.svg = mapSvg;
-        d3__WEBPACK_IMPORTED_MODULE_0__["json"]('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-            .then(this.drawMap);
-    }
+  return Map;
+}();
 
-    // Draws map
-    drawMap(data) {
-        const countries = topojson__WEBPACK_IMPORTED_MODULE_1__["feature"](data, data.objects.countries).features;
-        this.svg.selectAll('.country')
-            .data(countries)
-            .enter()
-            .append("path")
-            .attr('aria-label', country => country.properties.name)
-            .attr('aria-selected', false)
-            .attr('aria-level', 0)
-            .attr('aria-valuenow', undefined)
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry, true)
-            .attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["geoPath"]().projection(projection))
-            .on('mouseenter', _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseEnter"])
-            .on('mouseleave',_helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseExit"])
-            .on('mousemove',_helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseMove"])
-        this.mapLoaded();
-    }
 
-    // Loads the data for the year passed as argument
-    loadDataForYear(year) {
-        const filteredData = this.emissionData.filter(item => item.Year===year);
-
-        d3__WEBPACK_IMPORTED_MODULE_0__["selectAll"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry}`)
-            .transition()
-            .duration(50)
-            .attr('aria-level', 
-                Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__["getEmissionLevel"])(filteredData)
-            )
-            .attr('aria-valuenow', Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__["getEmissionValue"])(filteredData));
-    }
-
-    // Highlights the selected emission level
-    highlightLevel(level) {
-        this.svg.selectAll(`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry}`).attr('aria-selected', false);
-        this.svg.selectAll(`path[aria-level="${level}"]`).attr('aria-selected', true);
-    }
-}
 
 /***/ }),
 
@@ -33720,106 +33727,107 @@ class Map {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Progress; });
 /* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/styles */ "./src/styles/styles.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
-const playVector = "M2.067,0.043C2.21-0.028,2.372-0.008,2.493,0.085l13.312,8.503c0.094,0.078,0.154,0.191,0.154,0.313    c0,0.12-0.061,0.237-0.154,0.314L2.492,17.717c-0.07,0.057-0.162,0.087-0.25,0.087l-0.176-0.04    c-0.136-0.065-0.222-0.207-0.222-0.361V0.402C1.844,0.25,1.93,0.107,2.067,0.043z";
-const pauseVector1 = "M13.987,0c-2.762,0-5,2.239-5,5v35.975c0,2.763,2.238,5,5,5s5-2.238,5-5V5C18.987,2.238,16.75,0,13.987,0z";
-const pauseVector2 = "M31.987,0c-2.762,0-5,2.239-5,5v35.975c0,2.762,2.238,5,5,5s5-2.238,5-5V5C36.987,2.239,34.749,0,31.987,0z";
-const initiate = (config, setYearCallBack) => {
-    config.yearCounter = 1751;
-    config.totalYears = 2018-1752;
-    config.timer = null;
-    config.setYearCallBack = setYearCallBack;
-    config.playing = false;
-}
+var playVector = "M2.067,0.043C2.21-0.028,2.372-0.008,2.493,0.085l13.312,8.503c0.094,0.078,0.154,0.191,0.154,0.313    c0,0.12-0.061,0.237-0.154,0.314L2.492,17.717c-0.07,0.057-0.162,0.087-0.25,0.087l-0.176-0.04    c-0.136-0.065-0.222-0.207-0.222-0.361V0.402C1.844,0.25,1.93,0.107,2.067,0.043z";
+var pauseVector1 = "M13.987,0c-2.762,0-5,2.239-5,5v35.975c0,2.763,2.238,5,5,5s5-2.238,5-5V5C18.987,2.238,16.75,0,13.987,0z";
+var pauseVector2 = "M31.987,0c-2.762,0-5,2.239-5,5v35.975c0,2.762,2.238,5,5,5s5-2.238,5-5V5C36.987,2.239,34.749,0,31.987,0z";
 
+var initiate = function initiate(config, setYearCallBack) {
+  config.yearCounter = 1751;
+  config.totalYears = 2018 - 1752;
+  config.timer = null;
+  config.setYearCallBack = setYearCallBack;
+  config.playing = false;
+};
 /**
  * Adds progress bar
  */
-class Progress {
-    constructor(svg, setYearCallBack) {
-        initiate(this, setYearCallBack);
 
-        this.runTimer = this.runTimer.bind(this);
-        this.draw = this.draw.bind(this);
-        this.tick = this.tick.bind(this);
-        this.setPlaying = this.setPlaying.bind(this);
-        this.playPauseBtnClick = this.playPauseBtnClick.bind(this);
 
-        this.draw(svg);
-    }
+var Progress = /*#__PURE__*/function () {
+  function Progress(svg, setYearCallBack) {
+    _classCallCheck(this, Progress);
 
-    // Play or Pause the progress
-    playPauseBtnClick() {
-        if (this.yearCounter > 2017) {
-            this.yearCounter = 1751;
-        }
-        if (this.playing) {
-            clearInterval(this.timer);
-            this.setPlaying(false);
-        } else {
-            this.runTimer();
-            this.setPlaying(true);
-        }
-    }
+    initiate(this, setYearCallBack);
+    this.runTimer = this.runTimer.bind(this);
+    this.draw = this.draw.bind(this);
+    this.tick = this.tick.bind(this);
+    this.setPlaying = this.setPlaying.bind(this);
+    this.playPauseBtnClick = this.playPauseBtnClick.bind(this);
+    this.draw(svg);
+  } // Play or Pause the progress
 
-    // Draw the progress bar with play/pause button
-    draw(svg) {
-        this.svg = svg.append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressDiv, true);
 
-        const playPauseBtn = this.svg.append('g').on('click', this.playPauseBtnClick);
+  _createClass(Progress, [{
+    key: "playPauseBtnClick",
+    value: function playPauseBtnClick() {
+      if (this.yearCounter > 2017) {
+        this.yearCounter = 1751;
+      }
 
-        this.svg.append('text').text('1751').style('margin-right', '5px').style('color', 'gray');
-
-        this.playButton = playPauseBtn
-            .append('svg')
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressButton, true);
-        this.pauseButton = playPauseBtn
-            .append('svg')
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressButton, true)
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, !this.playing)
-            .attr('viewBox', '0,0,65,65');
-
-        this.playButton.append('path').attr('d', playVector);
-
-        this.pauseButton.append('path').attr('d', pauseVector1);
-        this.pauseButton.append('path').attr('d', pauseVector2);
-
-        this.progressBar = this.svg
-            .append('progress')
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressBar, true)
-            .attr('max',this.totalYears)
-            .attr('value', 0);
-
-        this.svg.append('text').text('2017').style('margin-left', '5px').style('color', 'gray');
-    }
-
-    // Start and run timer
-    runTimer() {
-        this.timer = setInterval(this.tick, 100);
+      if (this.playing) {
+        clearInterval(this.timer);
+        this.setPlaying(false);
+      } else {
+        this.runTimer();
         this.setPlaying(true);
-    }
-    
-    // Sets playing status
-    setPlaying(isPlaying) {
-        this.playing = isPlaying;
-        this.playButton.classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, this.playing);
-        this.pauseButton.classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, !this.playing);
-    }
+      }
+    } // Draw the progress bar with play/pause button
 
-    // Perform every tick of the timer
-    tick() {
-        if(this.yearCounter < 2018) {
-            this.setYearCallBack(this.yearCounter);
-            this.progressBar.transition().attr('value', this.yearCounter-1750);
-            this.yearCounter++; 
-        }
-        else{
-            clearInterval(this.timer);
-            this.setPlaying(false);
-        }
+  }, {
+    key: "draw",
+    value: function draw(svg) {
+      this.svg = svg.append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressDiv, true);
+      var playPauseBtn = this.svg.append('g').on('click', this.playPauseBtnClick);
+      this.svg.append('text').text('1751').style('margin-right', '5px').style('color', 'gray');
+      this.playButton = playPauseBtn.append('svg').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressButton, true);
+      this.pauseButton = playPauseBtn.append('svg').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressButton, true).classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, !this.playing).attr('viewBox', '0,0,65,65');
+      this.playButton.append('path').attr('d', playVector);
+      this.pauseButton.append('path').attr('d', pauseVector1);
+      this.pauseButton.append('path').attr('d', pauseVector2);
+      this.progressBar = this.svg.append('progress').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressBar, true).attr('max', this.totalYears).attr('value', 0);
+      this.svg.append('text').text('2017').style('margin-left', '5px').style('color', 'gray');
+    } // Start and run timer
+
+  }, {
+    key: "runTimer",
+    value: function runTimer() {
+      this.timer = setInterval(this.tick, 100);
+      this.setPlaying(true);
+    } // Sets playing status
+
+  }, {
+    key: "setPlaying",
+    value: function setPlaying(isPlaying) {
+      this.playing = isPlaying;
+      this.playButton.classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, this.playing);
+      this.pauseButton.classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, !this.playing);
+    } // Perform every tick of the timer
+
+  }, {
+    key: "tick",
+    value: function tick() {
+      if (this.yearCounter < 2018) {
+        this.setYearCallBack(this.yearCounter);
+        this.progressBar.transition().attr('value', this.yearCounter - 1750);
+        this.yearCounter++;
+      } else {
+        clearInterval(this.timer);
+        this.setPlaying(false);
+      }
     }
-}
+  }]);
+
+  return Progress;
+}();
+
+
 
 /***/ }),
 
@@ -33848,57 +33856,65 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLevel", function() { return getLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmissionLevel", function() { return getEmissionLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmissionValue", function() { return getEmissionValue; });
-const ranges = [0, 50000000, 500000000, 5000000000, 50000000000, 10000000000, 25000000000, 40000000000];
+var ranges = [0, 50000000, 500000000, 5000000000, 50000000000, 10000000000, 25000000000, 40000000000];
+var convertToText = function convertToText(value) {
+  if (value === null || isNaN(value)) {
+    return 'No Data';
+  }
 
-const convertToText = (value) => {
-    if (value === null || isNaN(value)) {
-        return 'No Data';
-    }
-    let temp = value/1000000000;
-    if (temp > 1) {
-        return `${temp.toFixed(0)} billion t`;
-    }
-    temp = value/1000000;
-    if (temp > 1) {
-        return `${temp.toFixed(0)} million t`;
-    }
-    temp = value/1000;
-    if (temp > 1) {
-        return `${temp.toFixed(0)} thousand t`;
-    }
-    return `${temp.toFixed(0)} t`;
-}
+  var temp = value / 1000000000;
 
-const getLevel = (value) => {
-    if (value < ranges[1]) {
-        return 1;
-    } else if (value < ranges[2]) {
-        return 2;
-    } else if (value < ranges[3]) {
-        return 3;
-    } else if (value < ranges[4]) {
-        return 4;
-    } else if (value < ranges[5]) {
-        return 5;
-    } else if (value < ranges[6]) {
-        return 6;
-    } 
-    return 7;
-}
+  if (temp > 1) {
+    return "".concat(temp.toFixed(0), " billion t");
+  }
 
-const getEmissionLevel = (filteredData) => {
-    return ((d) => {
-        const countryEmission = filteredData.find(data => d.properties.name.includes(data.Entity));
-        return countryEmission ? getLevel(countryEmission['Annual CO2']) : 0;
-    })
-}
+  temp = value / 1000000;
 
-const getEmissionValue = (filteredData) => {
-    return ((d) => {
-        const countryEmission = filteredData.find(data => d.properties.name.includes(data.Entity));
-        return countryEmission? countryEmission['Annual CO2'] : undefined;
-    })
-}
+  if (temp > 1) {
+    return "".concat(temp.toFixed(0), " million t");
+  }
+
+  temp = value / 1000;
+
+  if (temp > 1) {
+    return "".concat(temp.toFixed(0), " thousand t");
+  }
+
+  return "".concat(temp.toFixed(0), " t");
+};
+var getLevel = function getLevel(value) {
+  if (value < ranges[1]) {
+    return 1;
+  } else if (value < ranges[2]) {
+    return 2;
+  } else if (value < ranges[3]) {
+    return 3;
+  } else if (value < ranges[4]) {
+    return 4;
+  } else if (value < ranges[5]) {
+    return 5;
+  } else if (value < ranges[6]) {
+    return 6;
+  }
+
+  return 7;
+};
+var getEmissionLevel = function getEmissionLevel(filteredData) {
+  return function (d) {
+    var countryEmission = filteredData.find(function (data) {
+      return d.properties.name.includes(data.Entity);
+    });
+    return countryEmission ? getLevel(countryEmission['Annual CO2']) : 0;
+  };
+};
+var getEmissionValue = function getEmissionValue(filteredData) {
+  return function (d) {
+    var countryEmission = filteredData.find(function (data) {
+      return d.properties.name.includes(data.Entity);
+    });
+    return countryEmission ? countryEmission['Annual CO2'] : undefined;
+  };
+};
 
 /***/ }),
 
@@ -33920,43 +33936,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-const mouseEnter = (d) => {
-    const countrySvg = d.path[0];
-    const country = countrySvg.getAttribute('aria-label');
-    const emission = countrySvg.getAttribute('aria-valuenow') ;
-    console.log(emission);
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](countrySvg).attr('aria-selected', true);
-    const tooltip = d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
-        .style('opacity', '0.9')
-        .style('left',`${d.pageX}px`)
-        .style('top',`${d.pageY}px`);
-        
-    tooltip.append('text')
-        .style('width', '100%')
-        .text(country);
-
-    tooltip.append('text')
-        .text(Object(_dataUtils__WEBPACK_IMPORTED_MODULE_1__["convertToText"])(emission))
-        .style('margin-top', '10px')
-        .style('font-size', '12px')
-        .attr('y', '1rem');
-}
-
-const mouseExit = (d) => {
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false);
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
-        .style('opacity', '0')
-        .selectAll('*')
-        .remove();
-
-}
-
-const mouseMove = (d) => {
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
-        .style('left',`${d.pageX}px`)
-        .style('top',`${d.pageY}px`);
-}
+var mouseEnter = function mouseEnter(d) {
+  var countrySvg = d.path[0];
+  var country = countrySvg.getAttribute('aria-label');
+  var emission = countrySvg.getAttribute('aria-valuenow');
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"](countrySvg).attr('aria-selected', true);
+  var tooltip = d3__WEBPACK_IMPORTED_MODULE_0__["select"](".".concat(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip)).style('opacity', '0.9').style('left', "".concat(d.pageX, "px")).style('top', "".concat(d.pageY, "px"));
+  tooltip.append('text').style('width', '100%').text(country);
+  tooltip.append('text').text(Object(_dataUtils__WEBPACK_IMPORTED_MODULE_1__["convertToText"])(emission)).style('margin-top', '10px').style('font-size', '12px').attr('y', '1rem');
+};
+var mouseExit = function mouseExit(d) {
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false);
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"](".".concat(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip)).style('opacity', '0').selectAll('*').remove();
+};
+var mouseMove = function mouseMove(d) {
+  d3__WEBPACK_IMPORTED_MODULE_0__["select"](".".concat(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip)).style('left', "".concat(d.pageX, "px")).style('top', "".concat(d.pageY, "px"));
+};
 
 /***/ }),
 
@@ -33969,14 +33964,11 @@ const mouseMove = (d) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _styles_index_less__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./styles/index.less */ "./src/styles/index.less");
-/* harmony import */ var _styles_index_less__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_styles_index_less__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./main */ "./src/main.js");
+/* harmony import */ var _main__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./main */ "./src/main.js");
+ // import './styles/index.less';
 
 
-
-
-const main = new _main__WEBPACK_IMPORTED_MODULE_1__["default"]();
+var main = new _main__WEBPACK_IMPORTED_MODULE_0__["default"]();
 
 /***/ }),
 
@@ -33999,82 +33991,76 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Progress__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Progress */ "./src/Progress.js");
 
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 
 
 
 
 
-const initiate = (config) => {
-    config.svg = null;
-    config.headerSvg = null;
-    config.map = null;
-    config.progressBarSvg = null;
-}
 
-const loadHeader = (svg) => {
-    const headerSvg = svg.append("svg")
-        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].header, true)
-        .append('text')
-        .attr('x', 10)
-        .attr('y', 25)
-        .attr('width', '100%')
-        .text('Cummulative CO2 emissions, 2017');
-    return headerSvg;
-}
 
+var initiate = function initiate(config) {
+  config.svg = null;
+  config.headerSvg = null;
+  config.map = null;
+  config.progressBarSvg = null;
+};
+
+var loadHeader = function loadHeader(svg) {
+  var headerSvg = svg.append("svg").classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].header, true).append('text').attr('x', 10).attr('y', 25).attr('width', '100%').text('Cummulative CO2 emissions, 2017');
+  return headerSvg;
+};
 /**
  * The main class, which will be loaded at application launch
  */
-class Main {
-    constructor() {
-        initiate(this);
-        this.generateView = this.generateView.bind(this);
-        this.mapLoaded = this.mapLoaded.bind(this);
-        this.setYear = this.setYear.bind(this);
 
-        this.generateView();
+
+var Main = /*#__PURE__*/function () {
+  function Main() {
+    _classCallCheck(this, Main);
+
+    initiate(this);
+    this.generateView = this.generateView.bind(this);
+    this.mapLoaded = this.mapLoaded.bind(this);
+    this.setYear = this.setYear.bind(this);
+    this.generateView();
+  }
+
+  _createClass(Main, [{
+    key: "generateView",
+    value: function generateView() {
+      this.svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#app').append('div').attr('width', '100%').classed('base-style', true);
+      d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#app').append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].mapToolTip, true);
+      this.headerSvg = loadHeader(this.svg); // Create Map
+
+      this.map = new _Map__WEBPACK_IMPORTED_MODULE_2__["default"](this.svg, _data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3___default.a, this.mapLoaded); // Add color ranges
+
+      Object(_ColorCodes__WEBPACK_IMPORTED_MODULE_4__["default"])(this.svg, this.map.highlightLevel);
     }
-
-    generateView() {
-        this.svg = d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#app')
-            .append('div')
-            .attr('width', '100%')
-            .classed('base-style', true);
-
-            d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#app').append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].mapToolTip, true);
-        this.headerSvg = loadHeader(this.svg);
-
-        // Create Map
-        this.map = new _Map__WEBPACK_IMPORTED_MODULE_2__["default"](this.svg, _data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3___default.a, this.mapLoaded);
-
-        // Add color ranges
-        Object(_ColorCodes__WEBPACK_IMPORTED_MODULE_4__["default"])(this.svg, this.map.highlightLevel);
-
+  }, {
+    key: "mapLoaded",
+    value: function mapLoaded() {
+      // Add progress bar
+      this.progressBarSvg = new _Progress__WEBPACK_IMPORTED_MODULE_5__["default"](this.svg, this.setYear);
     }
-
-    mapLoaded() {
-        // Add progress bar
-        this.progressBarSvg = new _Progress__WEBPACK_IMPORTED_MODULE_5__["default"](this.svg, this.setYear);
+  }, {
+    key: "setYear",
+    value: function setYear(year) {
+      // Load data for the year
+      this.headerSvg.transition().text("Cummulative CO2 emissions, ".concat(year));
+      this.map.loadDataForYear(year);
     }
+  }]);
 
-    setYear(year) {
-        // Load data for the year
-        this.headerSvg.transition().text(`Cummulative CO2 emissions, ${year}`)
-        this.map.loadDataForYear(year);
-    }
-}
+  return Main;
+}();
 
-/***/ }),
 
-/***/ "./src/styles/index.less":
-/*!*******************************!*\
-  !*** ./src/styles/index.less ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
 
 /***/ }),
 
@@ -34088,23 +34074,23 @@ class Main {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-    header: 'header',
-    map: 'map',
-    mapCountry: 'map-country',
-    temperatureBar: 'temperature-bar',
-    selected: 'selected',
-    colorCodeUl: 'color-code-ul',
-    colorCodeli: 'color-code-li',
-    colorBox: 'color-box',
-    rangeLabel: 'range-label',
-    colorCodeDiv: 'color-code-div',
-    noDataLabel: 'no-data-label',
-    progressDiv: 'progress-div',
-    progressBar: 'progress-bar',
-    progressButton: 'play-pause-btn',
-    hideIcon: 'hide-icon',
-    mapToolTip: 'map-tooltip',
-    lineChart: 'line-chart'
+  header: 'header',
+  map: 'map',
+  mapCountry: 'map-country',
+  temperatureBar: 'temperature-bar',
+  selected: 'selected',
+  colorCodeUl: 'color-code-ul',
+  colorCodeli: 'color-code-li',
+  colorBox: 'color-box',
+  rangeLabel: 'range-label',
+  colorCodeDiv: 'color-code-div',
+  noDataLabel: 'no-data-label',
+  progressDiv: 'progress-div',
+  progressBar: 'progress-bar',
+  progressButton: 'play-pause-btn',
+  hideIcon: 'hide-icon',
+  mapToolTip: 'map-tooltip',
+  lineChart: 'line-chart'
 });
 
 /***/ })

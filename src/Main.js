@@ -2,7 +2,6 @@
 import * as d3 from 'd3';
 import styles from './styles/styles';
 import Map from './Map';
-import data from './data/CO2-Emissions-Country-Wise.csv';
 import ColorCodes from './ColorCodes';
 import Progress from './Progress';
 
@@ -47,7 +46,7 @@ export default class Main {
         this.headerSvg = loadHeader(this.svg);
 
         // Create Map
-        this.map = new Map(this.svg, data, this.mapLoaded);
+        this.map = new Map(this.svg, this.mapLoaded);
 
         // Add color ranges
         ColorCodes(this.svg, this.map.highlightLevel);

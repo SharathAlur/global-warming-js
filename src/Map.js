@@ -1,14 +1,14 @@
 "use strict";
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
+import emissionData from './data/CO2-Emissions-Country-Wise.csv';
 import styles from './styles/styles';
 import { getEmissionLevel, getEmissionValue } from './helpers/dataUtils';
 import { mouseEnter, mouseExit, mouseMove} from './helpers/tooltip';
 
-const initialize = (config, data, mapLoaded) => {
+const initialize = (config, mapLoaded) => {
     config.svg = null;
     config.countriesSvg = {};
-    config.emissionData = data;
     config.mapLoaded = mapLoaded;
 }
 const projection = d3.geoMercator().translate([400, 350]).scale(120);
@@ -18,8 +18,8 @@ const projection = d3.geoMercator().translate([400, 350]).scale(120);
  * Has helper functions to load the emission data to the map.
  */
 export default class Map {
-    constructor(svg, data, mapLoaded) {
-        initialize(this, data, mapLoaded);
+    constructor(svg, mapLoaded) {
+        initialize(this, mapLoaded);
         this.loadMap = this.loadMap.bind(this);
         this.drawMap = this.drawMap.bind(this);
         this.loadDataForYear = this.loadDataForYear.bind(this);
@@ -42,7 +42,7 @@ export default class Map {
     // Draws map
     drawMap(data) {
         const countries = topojson.feature(data, data.objects.countries).features;
-        this.svg.selectAll('.country')
+        this.svg.selectAll(`.${styles.mapCountry}`)
             .data(countries)
             .enter()
             .append("path")
@@ -60,7 +60,7 @@ export default class Map {
 
     // Loads the data for the year passed as argument
     loadDataForYear(year) {
-        const filteredData = this.emissionData.filter(item => item.Year===year);
+        const filteredData = emissionData.filter(item => item.Year===year);
 
         d3.selectAll(`.${styles.mapCountry}`)
             .transition()

@@ -131,7 +131,7 @@ svg {
   height: auto;
   padding: 2px;
   font-family: 'Merriweather', serif;
-  background: red;
+  background: lightsteelblue;
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
@@ -146,4 +146,4 @@ svg {
 }
 
 
-/*# sourceMappingURL=app.css.map*/
+/*# sourceMappingURL=style.css.map*/

@@ -5,7 +5,8 @@ module.exports = {
     devtool: 'source-map', // any "source-map"-like devtool is possible
     // 1
     entry: {
-      app: './src/index.js'
+      app: './src/index.js',
+      style: "./src/styles/index.less"
     },
  
     // 2
@@ -41,6 +42,16 @@ module.exports = {
             dynamicTyping: true,
             header: true,
             skipEmptyLines: true
+          }
+        },
+        {
+          test: /\.m?js$/,
+          exclude: /(node_modules|bower_components)/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
           }
         }
       ],
