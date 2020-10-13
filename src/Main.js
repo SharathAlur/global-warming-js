@@ -10,7 +10,6 @@ const initiate = (config) => {
     config.svg = null;
     config.headerSvg = null;
     config.map = null;
-    config.colorCodes = null;
     config.progressBarSvg = null;
 }
 
@@ -25,6 +24,9 @@ const loadHeader = (svg) => {
     return headerSvg;
 }
 
+/**
+ * The main class, which will be loaded at application launch
+ */
 export default class Main {
     constructor() {
         initiate(this);
@@ -44,9 +46,11 @@ export default class Main {
             d3.select('#app').append('div').classed(styles.mapToolTip, true);
         this.headerSvg = loadHeader(this.svg);
 
+        // Create Map
         this.map = new Map(this.svg, data, this.mapLoaded);
 
-        this.colorCodes = new ColorCodes(this.svg, this.map.highlightLevel);
+        // Add color ranges
+        ColorCodes(this.svg, this.map.highlightLevel);
 
     }
 
@@ -56,6 +60,7 @@ export default class Main {
     }
 
     setYear(year) {
+        // Load data for the year
         this.headerSvg.transition().text(`Cummulative CO2 emissions, ${year}`)
         this.map.loadDataForYear(year);
     }

@@ -78,7 +78,7 @@ svg {
 
         &[aria-level="0"] {
             background-color:@level-0;
-            margin-right: 40px;
+            margin-right: 45px;
             width: 40px;
         }
         &[aria-level="1"] {
@@ -120,7 +120,7 @@ svg {
         font-size: 12px;
     }
     & .no-data-label {
-        width: 35px;
+        width: 45px;
         text-align: center;
         font-size: 12px;
     }
@@ -129,7 +129,7 @@ svg {
     margin: 50px;
     display: flex;
     & .progress-bar {
-        width: 800px;
+        width: 750px;
     }
     & .play-pause-btn {
         width: 25px;
@@ -143,11 +143,10 @@ svg {
 .map-tooltip {
     position: absolute;			
     text-align: center;			
-    width: 180px;					
-    height: 80px;					
+    width: auto;					
+    height: auto;					
     padding: 2px;				
     font-family: 'Merriweather', serif;
-    // font-size: 14px;
     background: lightsteelblue;	
     border: 0px;		
     border-radius: 8px;			
@@ -155,4 +154,9 @@ svg {
     opacity: 0;
     display: flex;
     flex-flow: column;
+    padding: 5px
+}
+.line-chart {
+    stroke: blue;
+    stroke-width: 2px;
 }

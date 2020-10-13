@@ -15,4 +15,5 @@ export default {
     progressButton: 'play-pause-btn',
     hideIcon: 'hide-icon',
     mapToolTip: 'map-tooltip',
+    lineChart: 'line-chart'
 }

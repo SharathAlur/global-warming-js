@@ -64,7 +64,7 @@ svg {
 }
 .color-code-ul .color-box[aria-level="0"] {
   background-color: #f1f1f1;
-  margin-right: 40px;
+  margin-right: 45px;
   width: 40px;
 }
 .color-code-ul .color-box[aria-level="1"] {
@@ -105,7 +105,7 @@ svg {
   font-size: 12px;
 }
 .color-code-div .no-data-label {
-  width: 35px;
+  width: 45px;
   text-align: center;
   font-size: 12px;
 }
@@ -114,7 +114,7 @@ svg {
   display: flex;
 }
 .progress-div .progress-bar {
-  width: 800px;
+  width: 750px;
 }
 .progress-div .play-pause-btn {
   width: 25px;
@@ -127,17 +127,22 @@ svg {
 .map-tooltip {
   position: absolute;
   text-align: center;
-  width: 180px;
-  height: 80px;
+  width: auto;
+  height: auto;
   padding: 2px;
   font-family: 'Merriweather', serif;
-  background: lightsteelblue;
+  background: red;
   border: 0px;
   border-radius: 8px;
   pointer-events: none;
   opacity: 0;
   display: flex;
   flex-flow: column;
+  padding: 5px;
+}
+.line-chart {
+  stroke: blue;
+  stroke-width: 2px;
 }
 
 
