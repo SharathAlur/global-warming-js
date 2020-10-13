@@ -33569,47 +33569,46 @@ function sphericalTriangleArea(t) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ColorCodes; });
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
 /* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles/styles */ "./src/styles/styles.js");
+/* harmony import */ var _helpers_dataUtils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./helpers/dataUtils */ "./src/helpers/dataUtils.js");
 
 
 
-class ColorCodes {
-    constructor(svg, highlightLevel) {
-        this.highlightLevel = highlightLevel;
-        this.createColorCode = this.createColorCode.bind(this);
-        this.createColorCode(svg);
-    }
 
-    createColorCode(svg) {
-        const local = svg.append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeDiv, true);
+const colorCodes = (svg, highlightLevel) => {
+    const local = svg.append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeDiv, true);
 
-        const ranges = ['no data','0 t', '50 million t', '500 million t', '5 billion t', '50 billion t', '100 billion t', '250 billion t', '400 billion t']
-        this.textSvg = local.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeUl, true);
-        this.textSvg.selectAll(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].rangeLabel)
-            .data(ranges)
-            .enter()
-            .append('li').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeli, true)
-            .append('text')
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].rangeLabel, true)
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].noDataLabel, d => d === 'no data')
-            .text( d => d);
+    // Add range text
+    const colorRanges = ['no data', ..._helpers_dataUtils__WEBPACK_IMPORTED_MODULE_2__["ranges"]]
+    const textSvg = local.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeUl, true);
+    textSvg.selectAll(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].rangeLabel)
+        .data(colorRanges)
+        .enter()
+        .append('li').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeli, true)
+        .append('text')
+        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].rangeLabel, true)
+        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].noDataLabel, d => d === 'no data')
+        .text( d => Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_2__["convertToText"])(d));
 
-        this.colorsSvg = local.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeUl, true);
-        d3__WEBPACK_IMPORTED_MODULE_0__["range"](0, 8, 1).map((value) => {
-            this.colorsSvg.append('li').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeli, true).append('div')
-            .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorBox, true)
-            .attr('width', 100)
-            .attr('height', 10)
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('aria-level', value)
-            .on('mouseenter', d => this.highlightLevel(d.path[0].getAttribute('aria-level')))
-            .on('mouseleave', d => this.highlightLevel(-1));
-        });
-    }
+    // Add color ranges
+    const colorsSvg = local.append('ul').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeUl, true);
+    d3__WEBPACK_IMPORTED_MODULE_0__["range"](0, 8, 1).map((value) => {
+        colorsSvg.append('li')
+        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorCodeli, true)
+        .append('div')
+        .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].colorBox, true)
+        .attr('width', 100)
+        .attr('height', 10)
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('aria-level', value)
+        .on('mouseenter', d => highlightLevel(d.path[0].getAttribute('aria-level')))
+        .on('mouseleave', d => highlightLevel(-1));
+    });
 }
+
+/* harmony default export */ __webpack_exports__["default"] = (colorCodes);
 
 /***/ }),
 
@@ -33626,7 +33625,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
 /* harmony import */ var topojson__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! topojson */ "./node_modules/topojson/index.js");
 /* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./styles/styles */ "./src/styles/styles.js");
-/* harmony import */ var _helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helper */ "./src/helper.js");
+/* harmony import */ var _helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helpers/dataUtils */ "./src/helpers/dataUtils.js");
+/* harmony import */ var _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./helpers/tooltip */ "./src/helpers/tooltip.js");
+
 
 
 
@@ -33641,36 +33642,10 @@ const initialize = (config, data, mapLoaded) => {
 }
 const projection = d3__WEBPACK_IMPORTED_MODULE_0__["geoMercator"]().translate([400, 350]).scale(120);
 
-const mouseEnter = (d) => {
-    const countrySvg = d.path[0];
-    const country = countrySvg.getAttribute('aria-label');
-    const emission = countrySvg.getAttribute('aria-valuenow') ;
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](countrySvg).attr('aria-selected', true);
-    const tooltip = d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
-        .style('opacity', '0.9')
-        .style('left',`${d.pageX}px`)
-        .style('top',`${d.pageY}px`);
-        
-    tooltip.append('text')
-        .style('width', '100%')
-        .text(country);
-
-    tooltip.append('text')
-        .text(Object(_helper__WEBPACK_IMPORTED_MODULE_3__["convertToText"])(emission))
-        .style('margin-top', '10px')
-        .style('font-size', '12px')
-        .attr('y', '1rem');
-}
-
-const mouseExit = (d) => {
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false);
-    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
-        .style('opacity', '0')
-        .selectAll('*')
-        .remove();
-
-}
-
+/**
+ * Creates Global Map.
+ * Has helper functions to load the emission data to the map.
+ */
 class Map {
     constructor(svg, data, mapLoaded) {
         initialize(this, data, mapLoaded);
@@ -33682,6 +33657,7 @@ class Map {
         this.loadMap(svg);
     }
 
+    // Load initial map
     loadMap(svg) {
         const mapSvg = svg
             .append('svg')
@@ -33692,6 +33668,7 @@ class Map {
             .then(this.drawMap);
     }
 
+    // Draws map
     drawMap(data) {
         const countries = topojson__WEBPACK_IMPORTED_MODULE_1__["feature"](data, data.objects.countries).features;
         this.svg.selectAll('.country')
@@ -33701,13 +33678,16 @@ class Map {
             .attr('aria-label', country => country.properties.name)
             .attr('aria-selected', false)
             .attr('aria-level', 0)
+            .attr('aria-valuenow', undefined)
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry, true)
             .attr('d', d3__WEBPACK_IMPORTED_MODULE_0__["geoPath"]().projection(projection))
-            .on('mouseenter', mouseEnter)
-            .on('mouseleave',mouseExit)
+            .on('mouseenter', _helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseEnter"])
+            .on('mouseleave',_helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseExit"])
+            .on('mousemove',_helpers_tooltip__WEBPACK_IMPORTED_MODULE_4__["mouseMove"])
         this.mapLoaded();
     }
 
+    // Loads the data for the year passed as argument
     loadDataForYear(year) {
         const filteredData = this.emissionData.filter(item => item.Year===year);
 
@@ -33715,11 +33695,12 @@ class Map {
             .transition()
             .duration(50)
             .attr('aria-level', 
-                Object(_helper__WEBPACK_IMPORTED_MODULE_3__["getEmissionLevel"])(filteredData)
+                Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__["getEmissionLevel"])(filteredData)
             )
-            .attr('aria-valuenow', Object(_helper__WEBPACK_IMPORTED_MODULE_3__["getEmissionValue"])(filteredData));
+            .attr('aria-valuenow', Object(_helpers_dataUtils__WEBPACK_IMPORTED_MODULE_3__["getEmissionValue"])(filteredData));
     }
 
+    // Highlights the selected emission level
     highlightLevel(level) {
         this.svg.selectAll(`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapCountry}`).attr('aria-selected', false);
         this.svg.selectAll(`path[aria-level="${level}"]`).attr('aria-selected', true);
@@ -33752,6 +33733,9 @@ const initiate = (config, setYearCallBack) => {
     config.playing = false;
 }
 
+/**
+ * Adds progress bar
+ */
 class Progress {
     constructor(svg, setYearCallBack) {
         initiate(this, setYearCallBack);
@@ -33760,12 +33744,13 @@ class Progress {
         this.draw = this.draw.bind(this);
         this.tick = this.tick.bind(this);
         this.setPlaying = this.setPlaying.bind(this);
-        this.buttonClick = this.buttonClick.bind(this);
+        this.playPauseBtnClick = this.playPauseBtnClick.bind(this);
 
         this.draw(svg);
     }
 
-    buttonClick() {
+    // Play or Pause the progress
+    playPauseBtnClick() {
         if (this.yearCounter > 2017) {
             this.yearCounter = 1751;
         }
@@ -33778,46 +33763,51 @@ class Progress {
         }
     }
 
+    // Draw the progress bar with play/pause button
     draw(svg) {
         this.svg = svg.append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressDiv, true);
 
-        const playPauseButton = this.svg.append('g').on('click', this.buttonClick);
+        const playPauseBtn = this.svg.append('g').on('click', this.playPauseBtnClick);
 
-        this.playButton = playPauseButton
+        this.svg.append('text').text('1751').style('margin-right', '5px').style('color', 'gray');
+
+        this.playButton = playPauseBtn
             .append('svg')
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressButton, true);
-        this.pauseButton = playPauseButton
+        this.pauseButton = playPauseBtn
             .append('svg')
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressButton, true)
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, !this.playing)
             .attr('viewBox', '0,0,65,65');
 
-        this.playButton
-            .append('path').attr('d', playVector);
+        this.playButton.append('path').attr('d', playVector);
 
-        this.pauseButton.
-            append('path').attr('d', pauseVector1);
-        this.pauseButton
-        .append('path').attr('d', pauseVector2);
+        this.pauseButton.append('path').attr('d', pauseVector1);
+        this.pauseButton.append('path').attr('d', pauseVector2);
 
         this.progressBar = this.svg
             .append('progress')
             .classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].progressBar, true)
             .attr('max',this.totalYears)
             .attr('value', 0);
+
+        this.svg.append('text').text('2017').style('margin-left', '5px').style('color', 'gray');
     }
 
+    // Start and run timer
     runTimer() {
         this.timer = setInterval(this.tick, 100);
         this.setPlaying(true);
     }
     
+    // Sets playing status
     setPlaying(isPlaying) {
         this.playing = isPlaying;
         this.playButton.classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, this.playing);
         this.pauseButton.classed(_styles_styles__WEBPACK_IMPORTED_MODULE_0__["default"].hideIcon, !this.playing);
     }
 
+    // Perform every tick of the timer
     tick() {
         if(this.yearCounter < 2018) {
             this.setYearCallBack(this.yearCounter);
@@ -33828,7 +33818,7 @@ class Progress {
             clearInterval(this.timer);
             this.setPlaying(false);
         }
-      }
+    }
 }
 
 /***/ }),
@@ -33844,68 +33834,128 @@ module.exports = [{"Entity":"Afghanistan","Code":"AFG","Year":1949,"Annual CO2":
 
 /***/ }),
 
-/***/ "./src/helper.js":
-/*!***********************!*\
-  !*** ./src/helper.js ***!
-  \***********************/
-/*! exports provided: convertToText, getEmissionLevel, getEmissionValue */
+/***/ "./src/helpers/dataUtils.js":
+/*!**********************************!*\
+  !*** ./src/helpers/dataUtils.js ***!
+  \**********************************/
+/*! exports provided: ranges, convertToText, getLevel, getEmissionLevel, getEmissionValue */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ranges", function() { return ranges; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertToText", function() { return convertToText; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLevel", function() { return getLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmissionLevel", function() { return getEmissionLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEmissionValue", function() { return getEmissionValue; });
+const ranges = [0, 50000000, 500000000, 5000000000, 50000000000, 10000000000, 25000000000, 40000000000];
+
 const convertToText = (value) => {
-    if (!value) {
+    if (value === null || isNaN(value)) {
         return 'No Data';
     }
     let temp = value/1000000000;
     if (temp > 1) {
-        return `${temp.toFixed(2)} billion tonnes`;
+        return `${temp.toFixed(0)} billion t`;
     }
     temp = value/1000000;
     if (temp > 1) {
-        return `${temp.toFixed(2)} million tonnes`;
+        return `${temp.toFixed(0)} million t`;
     }
     temp = value/1000;
     if (temp > 1) {
-        return `${temp.toFixed(2)} thousand tonnes`;
+        return `${temp.toFixed(0)} thousand t`;
     }
-    return `${temp.toFixed(2)} tonnes`;
+    return `${temp.toFixed(0)} t`;
 }
 
+const getLevel = (value) => {
+    if (value < ranges[1]) {
+        return 1;
+    } else if (value < ranges[2]) {
+        return 2;
+    } else if (value < ranges[3]) {
+        return 3;
+    } else if (value < ranges[4]) {
+        return 4;
+    } else if (value < ranges[5]) {
+        return 5;
+    } else if (value < ranges[6]) {
+        return 6;
+    } 
+    return 7;
+}
 
 const getEmissionLevel = (filteredData) => {
     return ((d) => {
         const countryEmission = filteredData.find(data => d.properties.name.includes(data.Entity));
-        let emissionStatus;
-        if (!countryEmission) {
-            emissionStatus = 0;
-        } else if (countryEmission['Annual CO2'] < 50000000) {
-            emissionStatus = 1;
-        } else if (countryEmission['Annual CO2'] < 500000000) {
-            emissionStatus = 2;
-        } else if (countryEmission['Annual CO2'] < 5000000000) {
-            emissionStatus = 3;
-        } else if (countryEmission['Annual CO2'] < 50000000000) {
-            emissionStatus = 4;
-        } else if (countryEmission['Annual CO2'] < 10000000000) {
-            emissionStatus = 5;
-        } else if (countryEmission['Annual CO2'] < 25000000000) {
-            emissionStatus = 6;
-        } else if (countryEmission['Annual CO2'] < 40000000000) {
-            emissionStatus = 7;
-        }
-        return emissionStatus;
+        return countryEmission ? getLevel(countryEmission['Annual CO2']) : 0;
     })
 }
 
 const getEmissionValue = (filteredData) => {
     return ((d) => {
-        const countryEmission = filteredData.find(data => d.properties.name === data.Entity);
+        const countryEmission = filteredData.find(data => d.properties.name.includes(data.Entity));
         return countryEmission? countryEmission['Annual CO2'] : undefined;
     })
+}
+
+/***/ }),
+
+/***/ "./src/helpers/tooltip.js":
+/*!********************************!*\
+  !*** ./src/helpers/tooltip.js ***!
+  \********************************/
+/*! exports provided: mouseEnter, mouseExit, mouseMove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mouseEnter", function() { return mouseEnter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mouseExit", function() { return mouseExit; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mouseMove", function() { return mouseMove; });
+/* harmony import */ var d3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! d3 */ "./node_modules/d3/index.js");
+/* harmony import */ var _dataUtils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dataUtils */ "./src/helpers/dataUtils.js");
+/* harmony import */ var _styles_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../styles/styles */ "./src/styles/styles.js");
+
+
+
+
+const mouseEnter = (d) => {
+    const countrySvg = d.path[0];
+    const country = countrySvg.getAttribute('aria-label');
+    const emission = countrySvg.getAttribute('aria-valuenow') ;
+    console.log(emission);
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](countrySvg).attr('aria-selected', true);
+    const tooltip = d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
+        .style('opacity', '0.9')
+        .style('left',`${d.pageX}px`)
+        .style('top',`${d.pageY}px`);
+        
+    tooltip.append('text')
+        .style('width', '100%')
+        .text(country);
+
+    tooltip.append('text')
+        .text(Object(_dataUtils__WEBPACK_IMPORTED_MODULE_1__["convertToText"])(emission))
+        .style('margin-top', '10px')
+        .style('font-size', '12px')
+        .attr('y', '1rem');
+}
+
+const mouseExit = (d) => {
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](d.path[0]).attr('aria-selected', false);
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
+        .style('opacity', '0')
+        .selectAll('*')
+        .remove();
+
+}
+
+const mouseMove = (d) => {
+    d3__WEBPACK_IMPORTED_MODULE_0__["select"](`.${_styles_styles__WEBPACK_IMPORTED_MODULE_2__["default"].mapToolTip}`)
+        .style('left',`${d.pageX}px`)
+        .style('top',`${d.pageY}px`);
 }
 
 /***/ }),
@@ -33927,12 +33977,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const main = new _main__WEBPACK_IMPORTED_MODULE_1__["default"]();
-
-//d3.select('#app').append('svg').attr('height', 500).attr('width', '100%').attr('dx',10).classed('base-style', true);
-// d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-// .then((data) => {console.log(data)})
-// const indexer = new Index();
-// indexer.loadD3();
 
 /***/ }),
 
@@ -33965,7 +34009,6 @@ const initiate = (config) => {
     config.svg = null;
     config.headerSvg = null;
     config.map = null;
-    config.colorCodes = null;
     config.progressBarSvg = null;
 }
 
@@ -33980,6 +34023,9 @@ const loadHeader = (svg) => {
     return headerSvg;
 }
 
+/**
+ * The main class, which will be loaded at application launch
+ */
 class Main {
     constructor() {
         initiate(this);
@@ -33999,9 +34045,11 @@ class Main {
             d3__WEBPACK_IMPORTED_MODULE_0__["select"]('#app').append('div').classed(_styles_styles__WEBPACK_IMPORTED_MODULE_1__["default"].mapToolTip, true);
         this.headerSvg = loadHeader(this.svg);
 
+        // Create Map
         this.map = new _Map__WEBPACK_IMPORTED_MODULE_2__["default"](this.svg, _data_CO2_Emissions_Country_Wise_csv__WEBPACK_IMPORTED_MODULE_3___default.a, this.mapLoaded);
 
-        this.colorCodes = new _ColorCodes__WEBPACK_IMPORTED_MODULE_4__["default"](this.svg, this.map.highlightLevel);
+        // Add color ranges
+        Object(_ColorCodes__WEBPACK_IMPORTED_MODULE_4__["default"])(this.svg, this.map.highlightLevel);
 
     }
 
@@ -34011,6 +34059,7 @@ class Main {
     }
 
     setYear(year) {
+        // Load data for the year
         this.headerSvg.transition().text(`Cummulative CO2 emissions, ${year}`)
         this.map.loadDataForYear(year);
     }
@@ -34055,6 +34104,7 @@ __webpack_require__.r(__webpack_exports__);
     progressButton: 'play-pause-btn',
     hideIcon: 'hide-icon',
     mapToolTip: 'map-tooltip',
+    lineChart: 'line-chart'
 });
 
 /***/ })

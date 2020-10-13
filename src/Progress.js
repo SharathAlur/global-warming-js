@@ -11,6 +11,9 @@ const initiate = (config, setYearCallBack) => {
     config.playing = false;
 }
 
+/**
+ * Adds progress bar
+ */
 export default class Progress {
     constructor(svg, setYearCallBack) {
         initiate(this, setYearCallBack);
@@ -19,12 +22,13 @@ export default class Progress {
         this.draw = this.draw.bind(this);
         this.tick = this.tick.bind(this);
         this.setPlaying = this.setPlaying.bind(this);
-        this.buttonClick = this.buttonClick.bind(this);
+        this.playPauseBtnClick = this.playPauseBtnClick.bind(this);
 
         this.draw(svg);
     }
 
-    buttonClick() {
+    // Play or Pause the progress
+    playPauseBtnClick() {
         if (this.yearCounter > 2017) {
             this.yearCounter = 1751;
         }
@@ -37,46 +41,51 @@ export default class Progress {
         }
     }
 
+    // Draw the progress bar with play/pause button
     draw(svg) {
         this.svg = svg.append('div').classed(styles.progressDiv, true);
 
-        const playPauseButton = this.svg.append('g').on('click', this.buttonClick);
+        const playPauseBtn = this.svg.append('g').on('click', this.playPauseBtnClick);
 
-        this.playButton = playPauseButton
+        this.svg.append('text').text('1751').style('margin-right', '5px').style('color', 'gray');
+
+        this.playButton = playPauseBtn
             .append('svg')
             .classed(styles.progressButton, true);
-        this.pauseButton = playPauseButton
+        this.pauseButton = playPauseBtn
             .append('svg')
             .classed(styles.progressButton, true)
             .classed(styles.hideIcon, !this.playing)
             .attr('viewBox', '0,0,65,65');
 
-        this.playButton
-            .append('path').attr('d', playVector);
+        this.playButton.append('path').attr('d', playVector);
 
-        this.pauseButton.
-            append('path').attr('d', pauseVector1);
-        this.pauseButton
-        .append('path').attr('d', pauseVector2);
+        this.pauseButton.append('path').attr('d', pauseVector1);
+        this.pauseButton.append('path').attr('d', pauseVector2);
 
         this.progressBar = this.svg
             .append('progress')
             .classed(styles.progressBar, true)
             .attr('max',this.totalYears)
             .attr('value', 0);
+
+        this.svg.append('text').text('2017').style('margin-left', '5px').style('color', 'gray');
     }
 
+    // Start and run timer
     runTimer() {
         this.timer = setInterval(this.tick, 100);
         this.setPlaying(true);
     }
     
+    // Sets playing status
     setPlaying(isPlaying) {
         this.playing = isPlaying;
         this.playButton.classed(styles.hideIcon, this.playing);
         this.pauseButton.classed(styles.hideIcon, !this.playing);
     }
 
+    // Perform every tick of the timer
     tick() {
         if(this.yearCounter < 2018) {
             this.setYearCallBack(this.yearCounter);
@@ -87,5 +96,5 @@ export default class Progress {
             clearInterval(this.timer);
             this.setPlaying(false);
         }
-      }
+    }
 }
