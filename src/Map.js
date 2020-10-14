@@ -6,10 +6,9 @@ import styles from './styles/styles';
 import { getEmissionLevel, getEmissionValue } from './helpers/dataUtils';
 import { mouseEnter, mouseExit, mouseMove} from './helpers/tooltip';
 
-const initialize = (config, mapLoaded) => {
+const initialize = (config) => {
     config.svg = null;
     config.countriesSvg = {};
-    config.mapLoaded = mapLoaded;
 }
 const projection = d3.geoMercator().translate([400, 350]).scale(120);
 
@@ -18,8 +17,8 @@ const projection = d3.geoMercator().translate([400, 350]).scale(120);
  * Has helper functions to load the emission data to the map.
  */
 export default class Map {
-    constructor(svg, mapLoaded) {
-        initialize(this, mapLoaded);
+    constructor(svg) {
+        initialize(this);
         this.loadMap = this.loadMap.bind(this);
         this.drawMap = this.drawMap.bind(this);
         this.loadDataForYear = this.loadDataForYear.bind(this);
@@ -30,11 +29,9 @@ export default class Map {
 
     // Load initial map
     loadMap(svg) {
-        const mapSvg = svg
+        this.svg = svg
             .append('svg')
-            .classed(styles.map, true)
-            .attr('y', 30)
-        this.svg = mapSvg;
+            .classed(styles.map, true);
         d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
             .then(this.drawMap);
     }
@@ -54,8 +51,7 @@ export default class Map {
             .attr('d', d3.geoPath().projection(projection))
             .on('mouseenter', mouseEnter)
             .on('mouseleave',mouseExit)
-            .on('mousemove',mouseMove)
-        this.mapLoaded();
+            .on('mousemove',mouseMove);
     }
 
     // Loads the data for the year passed as argument

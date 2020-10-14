@@ -1,6 +1,7 @@
 export default {
     header: 'header',
     map: 'map',
+    visualContainer: 'visual-container',
     mapCountry: 'map-country',
     temperatureBar: 'temperature-bar',
     selected: 'selected',
@@ -15,5 +16,13 @@ export default {
     progressButton: 'play-pause-btn',
     hideIcon: 'hide-icon',
     mapToolTip: 'map-tooltip',
-    lineChart: 'line-chart'
+    lineChart: 'line-chart',
+    barChartContainer: 'bar-chart-container',
+    barChartXaxis: 'bar-chart-x-axis',
+    barChartYaxis: 'bar-chart-y-axis',
+    barGroup: 'bar-group',
+    barContainer: 'bar-container',
+    barRect: 'bar-rect',
+    barTitle: 'bar-title',
+    barValue: 'bar-value'
 }

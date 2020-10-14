@@ -11,7 +11,6 @@ describe('Progress bar', () => {
     beforeEach(() => {
         progressBarContainer = document.createElement("div");
         progressBarContainer.id = "test_code";
-        // progressBarContainer.classed('test_color_code', true);
         progressBarContainer.setAttribute(
             "style",
             "width: 1024px; height: 400px;"

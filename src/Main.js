@@ -4,6 +4,7 @@ import styles from './styles/styles';
 import Map from './Map';
 import ColorCodes from './ColorCodes';
 import Progress from './Progress';
+import BarChart from './BarChart';
 
 const initiate = (config) => {
     config.svg = null;
@@ -30,7 +31,6 @@ export default class Main {
     constructor() {
         initiate(this);
         this.generateView = this.generateView.bind(this);
-        this.mapLoaded = this.mapLoaded.bind(this);
         this.setYear = this.setYear.bind(this);
 
         this.generateView();
@@ -45,22 +45,24 @@ export default class Main {
             d3.select('#app').append('div').classed(styles.mapToolTip, true);
         this.headerSvg = loadHeader(this.svg);
 
+        const visualContainer = this.svg.append('div').classed(styles.visualContainer, true);
+
         // Create Map
-        this.map = new Map(this.svg, this.mapLoaded);
+        this.map = new Map(visualContainer);
 
         // Add color ranges
         ColorCodes(this.svg, this.map.highlightLevel);
-
-    }
-
-    mapLoaded() {
-        // Add progress bar
         this.progressBarSvg = new Progress(this.svg, this.setYear);
+
+        this.barChart = new BarChart(visualContainer);
+        // setTimeout(this.barChart.draw(2017), 200000)
+
     }
 
     setYear(year) {
         // Load data for the year
         this.headerSvg.transition().text(`Cummulative CO2 emissions, ${year}`)
         this.map.loadDataForYear(year);
+        this.barChart.draw(year);
     }
 }
