@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import styles from "./styles/styles";
 import emissionData from './data/CO2-Emissions-Country-Wise.csv'
 import { getMaxValue } from "./helpers/axis";
+import { convertToText } from "./helpers/dataUtils";
 
 const chartSettings = {
     width: 700,
@@ -63,6 +64,7 @@ export default class BarChart {
                 .axisTop(xAxisScale)
                 .ticks(ticksInXAxis)
                 .tickSize(-innerHeight)
+                .tickFormat(d => convertToText(d))
             );
         
         this.yAxisContainer
@@ -133,7 +135,7 @@ export default class BarChart {
                 this.currentValue = d['Annual CO2'];
 
                 return function(t) {
-                d3.select(this).text(Math.ceil(interpolate(t)));
+                d3.select(this).text(convertToText(interpolate(t)));
                 };
             });
         
