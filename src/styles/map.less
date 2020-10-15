@@ -1,0 +1,56 @@
+@import "colors.less";
+
+@map-height: 500px;
+.map {
+    width: 900px;
+    padding-top: 30px;
+    height: @map-height;
+}
+.map-country {
+    margin: 0;
+    fill: @level-0;
+    &[aria-selected="true"] {
+        stroke-width: 2px;
+        stroke: @border-color;
+    }
+    &[aria-level="0"] {
+        fill:@level-0;
+    }
+    &[aria-level="1"] {
+        fill:@level-1;
+    }
+    &[aria-level="2"] {
+        fill:@level-2;
+    }
+    &[aria-level="3"] {
+        fill:@level-3;
+    }
+    &[aria-level="4"] {
+        fill:@level-4;
+    }
+    &[aria-level="5"] {
+        fill:@level-5;
+    }
+    &[aria-level="6"] {
+        fill:@level-6;
+    }
+    &[aria-level="7"] {
+        fill:@level-7;
+    }
+}
+.map-tooltip {
+    position: absolute;			
+    text-align: center;			
+    width: auto;					
+    height: auto;					
+    padding: 2px;				
+    font-family: 'Merriweather', serif;
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;	
+    opacity: 0;
+    display: flex;
+    flex-flow: column;
+    padding: 5px
+}

@@ -2,7 +2,9 @@ import * as d3 from "d3";
 import styles from "./styles/styles";
 import emissionData from './data/CO2-Emissions-Country-Wise.csv'
 import { getMaxValue } from "./helpers/axis";
+import { convertToText } from "./helpers/dataUtils";
 
+// Bar chart settings
 const chartSettings = {
     width: 700,
     height: 500,
@@ -16,12 +18,16 @@ const chartSettings = {
 chartSettings.innerWidth = chartSettings.width - chartSettings.padding * 2;
 chartSettings.innerHeight = chartSettings.height - chartSettings.padding * 2;
 
-const xAxisScale = d3.scaleLinear().range([0, chartSettings.innerWidth]);
-const yAxisScale = d3
-    .scaleBand()
+const xAxisScale = d3.scaleLinear()
+    .range([0, chartSettings.innerWidth]);
+
+const yAxisScale = d3.scaleBand()
     .range([0, chartSettings.innerHeight])
     .padding(chartSettings.columnPadding);
 
+/**
+ * Class for bar chart
+ */
 export default class BarChart {
     constructor(svg) {
         this.upperlimit = 0;
@@ -39,15 +45,20 @@ export default class BarChart {
         );
     }
 
+    /**
+     * Draws the bars for the emission of the top 10 countries
+     * 
+     * @param {number} currentYear Current year data tobe displayed
+     */
     draw(currentYear) {
         const transition = this.svg
             .transition()
             .duration(300)
             .ease(d3.easeLinear)
-        let elapsedTime = chartSettings.duration;
+        const elapsedTime = chartSettings.duration;
         const { innerHeight, ticksInXAxis, titlePadding } = chartSettings;
         const dataDecendingOrder = emissionData
-            .filter(item => (item.Year===currentYear
+            .filter((item) => (item.Year===currentYear
                 && !item.Entity.includes('World')
                 && item.Code))
             .sort((a,b) => b['Annual CO2']-a['Annual CO2']).slice(0, 10);
@@ -63,6 +74,7 @@ export default class BarChart {
                 .axisTop(xAxisScale)
                 .ticks(ticksInXAxis)
                 .tickSize(-innerHeight)
+                .tickFormat((d) => convertToText(d))
             );
         
         this.yAxisContainer
@@ -74,7 +86,7 @@ export default class BarChart {
             .selectAll(`.${styles.barContainer}`)
             .data(dataDecendingOrder, ({ Entity }) => Entity);
 
-        // Enter selection
+        // Enter selection - Adds new data to the bar chart
         const barGroupsEnter = barGroups
             .enter()
             .append("g")
@@ -92,7 +104,7 @@ export default class BarChart {
             .classed(styles.barTitle, true)
             .attr("y", '13')
             .attr("x", -titlePadding)
-            .text( ({Entity}) => Entity);
+            .text( ({ Entity }) => Entity);
 
         barGroupsEnter
             .append("text")
@@ -122,7 +134,7 @@ export default class BarChart {
         barUpdate
             .select(`.${styles.barValue}`)
             .transition(transition)
-            .attr("x", d => xAxisScale(d['Annual CO2']) + titlePadding)
+            .attr("x", (d) => xAxisScale(d['Annual CO2']) + titlePadding)
             .tween("text", (d) => {
                 const interpolateStartValue =
                 elapsedTime === chartSettings.duration
@@ -133,11 +145,11 @@ export default class BarChart {
                 this.currentValue = d['Annual CO2'];
 
                 return function(t) {
-                d3.select(this).text(Math.ceil(interpolate(t)));
+                d3.select(this).text(convertToText(interpolate(t)));
                 };
             });
         
-        // Exit selection
+        // Exit selection - Works on element whose data is not binded anymore
         const bodyExit = barGroups.exit();
 
         bodyExit
@@ -170,7 +182,5 @@ export default class BarChart {
                 };
             });
 
-        }
-
-
+    }
 }

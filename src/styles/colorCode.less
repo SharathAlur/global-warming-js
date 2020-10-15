@@ -1,0 +1,72 @@
+@import "colors.less";
+
+@color-box-height: 10px;
+@color-box-width: 100px;
+
+.color-code-ul {
+    display: flex;
+    justify-content: left;
+    align-content: center;
+    margin: 0;
+    & .color-code-li {
+        display: flex;
+        align-items: center;
+    }
+    & .color-box {
+        height: @color-box-height;
+        width: @color-box-width;
+        align-self: flex-start;
+        align-content: center;
+        padding: 0;
+        background-color: @level-0;
+        border: 1px solid gray;
+
+        &[aria-level="0"] {
+            background-color:@level-0;
+            margin-right: 45px;
+            width: 40px;
+        }
+        &[aria-level="1"] {
+            background-color:@level-1;
+            margin-right: 0;
+        }
+        &[aria-level="2"] {
+            background-color:@level-2;
+            margin-right: 0;
+        }
+        &[aria-level="3"] {
+            background-color:@level-3;
+            margin-right: 0;
+        }
+        &[aria-level="4"] {
+            background-color:@level-4;
+            margin-right: 0;
+        }
+        &[aria-level="5"] {
+            background-color:@level-5;
+            margin-right: 0;
+        }
+        &[aria-level="6"] {
+            background-color:@level-6;
+            margin-right: 0;
+        }
+        &[aria-level="7"] {
+            background-color:@level-7;
+            margin-right: 0;
+        }
+    }
+}
+.color-code-div {
+    margin: 20px;
+    & .color-code-ul,
+    & .range-label {
+        width: 100px;
+        text-align: center;
+        font-size: 12px;
+    }
+    & .no-data-label {
+        width: 45px;
+        text-align: center;
+        font-size: 12px;
+    }
+}

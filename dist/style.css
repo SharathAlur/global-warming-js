@@ -1,13 +1,52 @@
-svg {
-  width: 100%;
-  height: auto;
+.bar-chart-container {
+  width: 700px;
+  height: 420px;
 }
-.header {
-  font-family: 'Merriweather', serif;
-  font-size: 30px;
-  height: 30px;
+.bar-chart-container .chart-title {
+  font-size: 18px;
+  fill: #d3d3d3;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: center;
+}
+.bar-chart-container .current-date {
+  font-size: 45px;
+  fill: #d3d3d3;
+  text-anchor: end;
+}
+.bar-chart-y-axis text,
+.bar-chart-y-axis .domain,
+.bar-chart-x-axis {
+  margin: 10px;
+}
+.bar-chart-y-axis text .domain,
+.bar-chart-y-axis .domain .domain,
+.bar-chart-x-axis .domain {
+  display: none;
+}
+.bar-chart-y-axis text .tick line,
+.bar-chart-y-axis .domain .tick line,
+.bar-chart-x-axis .tick line {
+  color: #d3d3d3;
+}
+.bar-chart-y-axis text .tick text,
+.bar-chart-y-axis .domain .tick text,
+.bar-chart-x-axis .tick text {
+  color: black;
+}
+.bar-group .bar-container .bar-rect {
+  fill: tomato;
+}
+.bar-group .bar-container .bar-title {
+  text-anchor: end;
+  fill: white;
+  font-size: 14px;
+}
+.bar-group .bar-container .bar-value {
+  font-size: 14px;
 }
 .map {
+  width: 900px;
   padding-top: 30px;
   height: 500px;
 }
@@ -42,6 +81,22 @@ svg {
 }
 .map-country[aria-level="7"] {
   fill: #942412;
+}
+.map-tooltip {
+  position: absolute;
+  text-align: center;
+  width: auto;
+  height: auto;
+  padding: 2px;
+  font-family: 'Merriweather', serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  flex-flow: column;
+  padding: 5px;
 }
 .color-code-ul {
   display: flex;
@@ -109,6 +164,63 @@ svg {
   text-align: center;
   font-size: 12px;
 }
+.line-chart {
+  stroke: blue;
+  stroke-width: 2px;
+  fill: none;
+}
+.modal {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.line-chart-svg {
+  height: 500px;
+  width: 1000px;
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  height: 500px;
+  margin-top: 30px;
+}
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.line-chart-title {
+  font-size: 18px;
+  fill: #8d8a8a;
+  font-weight: bold;
+  text-anchor: middle;
+}
+svg {
+  width: 100%;
+  height: auto;
+}
+.header {
+  font-family: 'Merriweather', serif;
+  font-size: 30px;
+  height: 30px;
+}
+.visual-container {
+  display: flex;
+}
 .progress-div {
   margin: 50px;
   display: flex;
@@ -123,26 +235,6 @@ svg {
 }
 .progress-div .hide-icon {
   display: none;
-}
-.map-tooltip {
-  position: absolute;
-  text-align: center;
-  width: auto;
-  height: auto;
-  padding: 2px;
-  font-family: 'Merriweather', serif;
-  background: lightsteelblue;
-  border: 0px;
-  border-radius: 8px;
-  pointer-events: none;
-  opacity: 0;
-  display: flex;
-  flex-flow: column;
-  padding: 5px;
-}
-.line-chart {
-  stroke: blue;
-  stroke-width: 2px;
 }
 
 

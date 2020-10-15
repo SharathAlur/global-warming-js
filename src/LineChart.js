@@ -1,79 +1,112 @@
 import * as d3 from 'd3';
-import data from './data/CO2-Emissions-Country-Wise.csv';
-import {convertToText} from './helpers/dataUtils';
-import { getMaxValue, getTickValues } from './helpers/axis';
+import { convertToText } from './helpers/dataUtils';
+import { getMaxValue } from './helpers/axis';
 import styles from './styles/styles';
+import emissionData from './data/CO2-Emissions-Country-Wise.csv';
 
-const margin = {top: 10, right: 30, bottom: 30, left: 120};
-const width = 1000 - margin.left - margin.right;
-const height = 400 - margin.top - margin.bottom;
+const chartSettings = {
+    marginTop: 10,
+    marginLeft: 80,
+    marginBottom: 30,
+    marginRight: 30,
+    width: 1000,
+    height: 400,
+}
 
-// y axis scale
-const yAxis = upperLimit => d3.scaleLinear().domain([0, upperLimit]).range([ height, 0 ]);
+chartSettings.innerWidth = chartSettings.width - chartSettings.marginLeft - chartSettings.marginRight;
+chartSettings.innerHeight = chartSettings.height - chartSettings.marginTop - chartSettings.marginBottom;
 
-// Creates basic graph
-const createBasicGraph = (bindId) => {
-    const lineChartSvg = d3.select(bindId)
+/**
+ * Sets y-axis scale based on the upper limit
+ *
+ * @param {number} upperLimit upper limit value for the y-axis
+ * 
+ * @returns {Function} y-axis scale
+ */
+const yScale = (upperLimit) => d3.scaleLinear().domain([0, upperLimit]).range([ chartSettings.innerHeight, 0 ]);
+
+// Add X axis
+const xScale = d3.scaleTime()
+    .domain([d3.timeParse("%Y")(1751), d3.timeParse("%Y")(2020)])
+    .range([ 0, chartSettings.innerWidth ]);
+
+/**
+ * Creates Initial line chart
+ *
+ * @param {string} bindId selector to create line chart
+ * @param {string} countryName country name to display on chart
+ * 
+ * @returns {d3.Selection} line chart svg
+ */
+const createBasicGraph = (bindId, countryName) => {
+    const { width, height, marginLeft, innerHeight } = chartSettings;
+    const chartContainer = d3.select(bindId)
         .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .style("position", 'absolute')
-        .append("g")
+        .classed(styles.lineChartSvg, true)
+        .attr("width", width)
+        .attr("height", height);
+    createTitle(chartContainer, countryName);
+    const lineChartSvg = chartContainer.append("g")
             .attr("transform",
-                "translate(" + margin.left + "," + margin.top + ")");
-    // Add X axis
-    const x = d3.scaleTime()
-        .domain([d3.timeParse("%Y")(d3.min(data, d => d.Year)), d3.timeParse("%Y")(2020)])
-        .range([ 0, width ]);
+                `translate(${  marginLeft  }, 50)`);
+
     lineChartSvg.append("g")
-        .classed('x-axis', true)
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+        .classed(styles.lineChartXaxis, true)
+        .attr("transform", `translate(0,${  innerHeight  })`)
+        .call(d3.axisBottom(xScale));
     
-    // add Y axis
-    lineChartSvg.append("g")
-        .classed('y-axis', true);
-    // add Y gridlines
     lineChartSvg.append("g")			
-        .classed("y-axis-grid", true);
+        .classed(styles.lineChartYaxis, true);
     return lineChartSvg;
 }
+/**
+ * Creates title for the line graph
+ *
+ * @param {d3.Selection} div The text added in
+ * @param {string} countryName Country name to display
+ * 
+ * @returns {d3.Selection} the title node
+ */
+const createTitle = (div, countryName) => (div.append('text')
+    .classed(styles.lineChartTitle, true)
+    .text(countryName)
+    .attr('x', chartSettings.innerWidth/2)
+    .attr('y', 20));
 /**
  * Creates line chart. One can add as many line as they want by calling draw line method
  */
 export default class LineChart {
-    constructor(bindId) {
-        this.svg = createBasicGraph(bindId);
-        this.upperLimit = 0;
+    constructor(bindId, countryName) {
+        this.svg = createBasicGraph(bindId, countryName);
+        this.upperLimit = 1000;
     }
 
     // Update Y axis
     updateYAxis() {
-        const y = yAxis(this.upperLimit);
-        this.svg.select('.y-axis')
-            .call(d3.axisLeft(y)
-                .tickValues(getTickValues(this.upperLimit))
-                .tickFormat(d => convertToText(d)));
-
-        // add the Y gridlines
-        this.svg.select(".y-axis-grid")
-            .style('color', '#D3D3D3')
-            .call(d3.axisLeft(y)
-                .tickValues(getTickValues(this.upperLimit))
-                .tickSize(-width));
+                
     }
 
-    drawLine(data) {
+    drawLine(country) {
+        const data = emissionData.filter(({ Entity }) => country.includes(Entity))
         // Find upper limit for the Y axis based on the data
-        this.upperLimit = getMaxValue(data, this.updateYAxis);
-        this.updateYAxis();
+        this.upperLimit = getMaxValue(data, this.upperLimit);
+
+        const y = yScale(this.upperLimit);
+
+        // add the Y gridlines
+        this.svg.select(`.${styles.lineChartYaxis}`)
+            .style('color', '#D3D3D3')
+            .call(d3.axisLeft(y)
+                .ticks(5)
+                .tickSize(-chartSettings.innerWidth)
+                .tickFormat((d) => convertToText(d)));
         // Add the line
-        lineChartSvg.append("path")
+        this.svg.append("path")
             .classed(styles.lineChart, true)
             .datum(data)
             .attr("d", d3.line()
-                .x(d => x(d3.timeParse("%Y")(d.Year)))
-                .y(d => y(d['Annual CO2']))
+                .x((d) => xScale(d3.timeParse("%Y")(d.Year)))
+                .y((d) => yScale(this.upperLimit)(d['Annual CO2']))
             );
     }
 }
