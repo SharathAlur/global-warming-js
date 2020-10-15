@@ -27,7 +27,9 @@ export default class Progress {
         this.draw(svg);
     }
 
-    // Play or Pause the progress
+    /**
+     * Handler to Play or Pause the progress
+     */
     playPauseBtnClick() {
         if (this.yearCounter > 2017) {
             this.yearCounter = 1751;
@@ -41,7 +43,11 @@ export default class Progress {
         }
     }
 
-    // Draw the progress bar with play/pause button
+    /**
+     * Draw the progress bar with play/pause button
+     * 
+     * @param {d3.Selection} svg The content to be drawn in.
+     */
     draw(svg) {
         this.svg = svg.append('div').classed(styles.progressDiv, true);
 
@@ -72,20 +78,28 @@ export default class Progress {
         this.svg.append('text').text('2017').style('margin-left', '5px').style('color', 'gray');
     }
 
-    // Start and run timer
+    /**
+     * Start and run timer
+     */
     runTimer() {
         this.timer = setInterval(this.tick, 100);
         this.setPlaying(true);
     }
     
-    // Sets playing status
+    /**
+     * Sets playing status
+     * 
+     * @param {Boolean} isPlaying
+     */
     setPlaying(isPlaying) {
         this.playing = isPlaying;
         this.playButton.classed(styles.hideIcon, this.playing);
         this.pauseButton.classed(styles.hideIcon, !this.playing);
     }
 
-    // Perform every tick of the timer
+    /**
+     * Perform every tick of the timer
+     */
     tick() {
         if(this.yearCounter < 2018) {
             this.setYearCallBack(this.yearCounter);

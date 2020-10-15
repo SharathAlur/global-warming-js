@@ -2,6 +2,12 @@ import * as d3 from 'd3';
 import styles from './styles/styles';
 import { ranges, convertToText } from './helpers/dataUtils';
 
+/**
+ * Creates the color code for the emission criticality
+ * 
+ * @param {d3.selection} svg Node in which, the color code to be drawn
+ * @param {Function} highlightLevel Call back function to highlight the level on mouse hover
+ */
 const colorCodes = (svg, highlightLevel) => {
     const local = svg.append('div').classed(styles.colorCodeDiv, true);
 

@@ -24,6 +24,13 @@ export const convertToText = (value) => {
     return `${+temp.toFixed(2)} t`;
 }
 
+/**
+ * Identifies the emission level in the range
+ * 
+ * @param {Number} value emission value
+ * 
+ * @returns {Number} emission level
+ */
 export const getLevel = (value) => {
     if (value < ranges[1]) {
         return 1;
@@ -41,6 +48,12 @@ export const getLevel = (value) => {
     return 7;
 }
 
+/**
+ * Wrapper method to find the emission level for a country
+ * @param {Array} filteredData Emission data loaded on the map
+ * 
+ * @returns {Function} function to find emission level for the country hovered on
+ */
 export const getEmissionLevel = (filteredData) => {
     return ((d) => {
         const countryEmission = filteredData.find(({Entity}) => d.properties.name.includes(Entity));
@@ -48,6 +61,13 @@ export const getEmissionLevel = (filteredData) => {
     })
 }
 
+
+/**
+ * Wrapper method to find the emission value for a country
+ * @param {Array} filteredData Emission data loaded on the map
+ * 
+ * @returns {Function} function to find emission value for the country hovered on
+ */
 export const getEmissionValue = (filteredData) => {
     return ((d) => {
         const countryEmission = filteredData.find(({Entity}) => d.properties.name.includes(Entity));

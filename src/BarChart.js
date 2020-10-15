@@ -4,6 +4,7 @@ import emissionData from './data/CO2-Emissions-Country-Wise.csv'
 import { getMaxValue } from "./helpers/axis";
 import { convertToText } from "./helpers/dataUtils";
 
+// Bar chart settings
 const chartSettings = {
     width: 700,
     height: 500,
@@ -17,12 +18,16 @@ const chartSettings = {
 chartSettings.innerWidth = chartSettings.width - chartSettings.padding * 2;
 chartSettings.innerHeight = chartSettings.height - chartSettings.padding * 2;
 
-const xAxisScale = d3.scaleLinear().range([0, chartSettings.innerWidth]);
-const yAxisScale = d3
-    .scaleBand()
+const xAxisScale = d3.scaleLinear()
+    .range([0, chartSettings.innerWidth]);
+
+const yAxisScale = d3.scaleBand()
     .range([0, chartSettings.innerHeight])
     .padding(chartSettings.columnPadding);
 
+/**
+ * Class for bar chart
+ */
 export default class BarChart {
     constructor(svg) {
         this.upperlimit = 0;
@@ -40,6 +45,11 @@ export default class BarChart {
         );
     }
 
+    /**
+     * Draws the bars for the emission of the top 10 countries
+     * 
+     * @param {Number} currentYear Current year data tobe displayed
+     */
     draw(currentYear) {
         const transition = this.svg
             .transition()
@@ -76,7 +86,7 @@ export default class BarChart {
             .selectAll(`.${styles.barContainer}`)
             .data(dataDecendingOrder, ({ Entity }) => Entity);
 
-        // Enter selection
+        // Enter selection - Adds new data to the bar chart
         const barGroupsEnter = barGroups
             .enter()
             .append("g")
@@ -139,7 +149,7 @@ export default class BarChart {
                 };
             });
         
-        // Exit selection
+        // Exit selection - Works on element whose data is not binded anymore
         const bodyExit = barGroups.exit();
 
         bodyExit
@@ -172,7 +182,5 @@ export default class BarChart {
                 };
             });
 
-        }
-
-
+    }
 }
