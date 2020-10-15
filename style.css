@@ -1,0 +1,241 @@
+.bar-chart-container {
+  width: 700px;
+  height: 420px;
+}
+.bar-chart-container .chart-title {
+  font-size: 18px;
+  fill: #d3d3d3;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: center;
+}
+.bar-chart-container .current-date {
+  font-size: 45px;
+  fill: #d3d3d3;
+  text-anchor: end;
+}
+.bar-chart-y-axis text,
+.bar-chart-y-axis .domain,
+.bar-chart-x-axis {
+  margin: 10px;
+}
+.bar-chart-y-axis text .domain,
+.bar-chart-y-axis .domain .domain,
+.bar-chart-x-axis .domain {
+  display: none;
+}
+.bar-chart-y-axis text .tick line,
+.bar-chart-y-axis .domain .tick line,
+.bar-chart-x-axis .tick line {
+  color: #d3d3d3;
+}
+.bar-chart-y-axis text .tick text,
+.bar-chart-y-axis .domain .tick text,
+.bar-chart-x-axis .tick text {
+  color: black;
+}
+.bar-group .bar-container .bar-rect {
+  fill: tomato;
+}
+.bar-group .bar-container .bar-title {
+  text-anchor: end;
+  fill: white;
+  font-size: 14px;
+}
+.bar-group .bar-container .bar-value {
+  font-size: 14px;
+}
+.map {
+  width: 900px;
+  padding-top: 30px;
+  height: 500px;
+}
+.map-country {
+  margin: 0;
+  fill: #f1f1f1;
+}
+.map-country[aria-selected="true"] {
+  stroke-width: 2px;
+  stroke: black;
+}
+.map-country[aria-level="0"] {
+  fill: #f1f1f1;
+}
+.map-country[aria-level="1"] {
+  fill: #fdf4e3;
+}
+.map-country[aria-level="2"] {
+  fill: #f7d7ad;
+}
+.map-country[aria-level="3"] {
+  fill: #f3c498;
+}
+.map-country[aria-level="4"] {
+  fill: #eb9f6f;
+}
+.map-country[aria-level="5"] {
+  fill: #e17a5d;
+}
+.map-country[aria-level="6"] {
+  fill: #ca4a32;
+}
+.map-country[aria-level="7"] {
+  fill: #942412;
+}
+.map-tooltip {
+  position: absolute;
+  text-align: center;
+  width: auto;
+  height: auto;
+  padding: 2px;
+  font-family: 'Merriweather', serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  flex-flow: column;
+  padding: 5px;
+}
+.color-code-ul {
+  display: flex;
+  justify-content: left;
+  align-content: center;
+  margin: 0;
+}
+.color-code-ul .color-code-li {
+  display: flex;
+  align-items: center;
+}
+.color-code-ul .color-box {
+  height: 10px;
+  width: 100px;
+  align-self: flex-start;
+  align-content: center;
+  padding: 0;
+  background-color: #f1f1f1;
+  border: 1px solid gray;
+}
+.color-code-ul .color-box[aria-level="0"] {
+  background-color: #f1f1f1;
+  margin-right: 45px;
+  width: 40px;
+}
+.color-code-ul .color-box[aria-level="1"] {
+  background-color: #fdf4e3;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="2"] {
+  background-color: #f7d7ad;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="3"] {
+  background-color: #f3c498;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="4"] {
+  background-color: #eb9f6f;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="5"] {
+  background-color: #e17a5d;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="6"] {
+  background-color: #ca4a32;
+  margin-right: 0;
+}
+.color-code-ul .color-box[aria-level="7"] {
+  background-color: #942412;
+  margin-right: 0;
+}
+.color-code-div {
+  margin: 20px;
+}
+.color-code-div .color-code-ul,
+.color-code-div .range-label {
+  width: 100px;
+  text-align: center;
+  font-size: 12px;
+}
+.color-code-div .no-data-label {
+  width: 45px;
+  text-align: center;
+  font-size: 12px;
+}
+.line-chart {
+  stroke: blue;
+  stroke-width: 2px;
+  fill: none;
+}
+.modal {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.line-chart-svg {
+  height: 500px;
+  width: 1000px;
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  height: 500px;
+  margin-top: 30px;
+}
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.line-chart-title {
+  font-size: 18px;
+  fill: #8d8a8a;
+  font-weight: bold;
+  text-anchor: middle;
+}
+svg {
+  width: 100%;
+  height: auto;
+}
+.header {
+  font-family: 'Merriweather', serif;
+  font-size: 30px;
+  height: 30px;
+}
+.visual-container {
+  display: flex;
+}
+.progress-div {
+  margin: 50px;
+  display: flex;
+}
+.progress-div .progress-bar {
+  width: 750px;
+}
+.progress-div .play-pause-btn {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+.progress-div .hide-icon {
+  display: none;
+}
+
+
+/*# sourceMappingURL=style.css.map*/
