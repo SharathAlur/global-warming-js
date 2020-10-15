@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
 import data from './data/CO2-Emissions-Country-Wise.csv';
 import {convertToText} from './helpers/dataUtils';
-import { getMaxValue, getTickValues } from './helpers/axis';
+import { getMaxValue } from './helpers/axis';
 import styles from './styles/styles';
+import emissionData from './data/CO2-Emissions-Country-Wise.csv';
 
 const margin = {top: 10, right: 30, bottom: 30, left: 120};
 const width = 1000 - margin.left - margin.right;
@@ -52,18 +53,20 @@ export default class LineChart {
         const y = yAxis(this.upperLimit);
         this.svg.select('.y-axis')
             .call(d3.axisLeft(y)
-                .tickValues(getTickValues(this.upperLimit))
+                .ticks(5)
                 .tickFormat(d => convertToText(d)));
 
         // add the Y gridlines
         this.svg.select(".y-axis-grid")
             .style('color', '#D3D3D3')
             .call(d3.axisLeft(y)
-                .tickValues(getTickValues(this.upperLimit))
+                .ticks(5)
                 .tickSize(-width));
+                
     }
 
-    drawLine(data) {
+    drawLine(country) {
+        const data = emissionData.filter(({Entity}) => country.includes(Entity))
         // Find upper limit for the Y axis based on the data
         this.upperLimit = getMaxValue(data, this.updateYAxis);
         this.updateYAxis();
