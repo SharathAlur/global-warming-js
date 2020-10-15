@@ -9,7 +9,7 @@ import BarChart from './BarChart';
 /**
  * Initialize the main class
  * 
- * @param {Object} config object
+ * @param {object} config object
  */
 const initiate = (config) => {
     config.svg = null;
@@ -22,7 +22,7 @@ const initiate = (config) => {
 /**
  * Loads the header for the application
  * 
- * @param {d3.Selection} svg 
+ * @param {d3.Selection} svg Node to load the header
  * 
  * @returns {d3.Selection} header svg
  */
@@ -77,7 +77,7 @@ export default class Main {
     /**
      * Sets the current year being displayed. And loads data for the year
      * 
-     * @param {Number} year 
+     * @param {number} year Current year
      */
     setYear(year) {
         this.headerSvg.transition().text(`Cummulative CO2 emissions, ${year}`)

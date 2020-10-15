@@ -48,17 +48,17 @@ export default class BarChart {
     /**
      * Draws the bars for the emission of the top 10 countries
      * 
-     * @param {Number} currentYear Current year data tobe displayed
+     * @param {number} currentYear Current year data tobe displayed
      */
     draw(currentYear) {
         const transition = this.svg
             .transition()
             .duration(300)
             .ease(d3.easeLinear)
-        let elapsedTime = chartSettings.duration;
+        const elapsedTime = chartSettings.duration;
         const { innerHeight, ticksInXAxis, titlePadding } = chartSettings;
         const dataDecendingOrder = emissionData
-            .filter(item => (item.Year===currentYear
+            .filter((item) => (item.Year===currentYear
                 && !item.Entity.includes('World')
                 && item.Code))
             .sort((a,b) => b['Annual CO2']-a['Annual CO2']).slice(0, 10);
@@ -74,7 +74,7 @@ export default class BarChart {
                 .axisTop(xAxisScale)
                 .ticks(ticksInXAxis)
                 .tickSize(-innerHeight)
-                .tickFormat(d => convertToText(d))
+                .tickFormat((d) => convertToText(d))
             );
         
         this.yAxisContainer
@@ -104,7 +104,7 @@ export default class BarChart {
             .classed(styles.barTitle, true)
             .attr("y", '13')
             .attr("x", -titlePadding)
-            .text( ({Entity}) => Entity);
+            .text( ({ Entity }) => Entity);
 
         barGroupsEnter
             .append("text")
@@ -134,7 +134,7 @@ export default class BarChart {
         barUpdate
             .select(`.${styles.barValue}`)
             .transition(transition)
-            .attr("x", d => xAxisScale(d['Annual CO2']) + titlePadding)
+            .attr("x", (d) => xAxisScale(d['Annual CO2']) + titlePadding)
             .tween("text", (d) => {
                 const interpolateStartValue =
                 elapsedTime === chartSettings.duration

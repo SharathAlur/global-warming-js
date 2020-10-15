@@ -5,7 +5,7 @@ import styles from '../styles/styles';
  * Mouse enter event handler for the map
  * Displayes tooltip
  * 
- * @param {Object} d Mouse event
+ * @param {object} d Mouse event
  */
 export const mouseEnter = (d) => {
     const countrySvg = d.path[0];
@@ -31,7 +31,7 @@ export const mouseEnter = (d) => {
  * Mouse exit event handler for the map
  * Hides tooltip
  * 
- * @param {Object} d Mouse event
+ * @param {object} d Mouse event
  */
 export const mouseExit = (d) => {
     d3.select(d.path[0]).attr('aria-selected', false);
@@ -44,7 +44,7 @@ export const mouseExit = (d) => {
  * Mouse mouse event handler for the map
  * Moves tooltip along with mouse
  * 
- * @param {Object} d Mouse event
+ * @param {object} d Mouse event
  */
 export const mouseMove = (d) => {
     d3.select(`.${styles.mapToolTip}`)

@@ -2,8 +2,8 @@ export const ranges = [0, 50000000, 500000000, 5000000000, 50000000000, 10000000
 /**
  * Converts the numbers to readable string format
  * 
- * @param {Number} value Emission Value
- * @returns {String} Value in readable string format
+ * @param {number} value Emission Value
+ * @returns {string} Value in readable string format
  */
 export const convertToText = (value) => {
     if (value === null || isNaN(value)) {
@@ -27,9 +27,9 @@ export const convertToText = (value) => {
 /**
  * Identifies the emission level in the range
  * 
- * @param {Number} value emission value
+ * @param {number} value emission value
  * 
- * @returns {Number} emission level
+ * @returns {number} emission level
  */
 export const getLevel = (value) => {
     if (value < ranges[1]) {
@@ -50,27 +50,25 @@ export const getLevel = (value) => {
 
 /**
  * Wrapper method to find the emission level for a country
+ *
  * @param {Array} filteredData Emission data loaded on the map
  * 
  * @returns {Function} function to find emission level for the country hovered on
  */
-export const getEmissionLevel = (filteredData) => {
-    return ((d) => {
-        const countryEmission = filteredData.find(({Entity}) => d.properties.name.includes(Entity));
+export const getEmissionLevel = (filteredData) => ((d) => {
+        const countryEmission = filteredData.find(({ Entity }) => d.properties.name.includes(Entity));
         return countryEmission ? getLevel(countryEmission['Annual CO2']) : 0;
     })
-}
 
 
 /**
  * Wrapper method to find the emission value for a country
+ *
  * @param {Array} filteredData Emission data loaded on the map
  * 
  * @returns {Function} function to find emission value for the country hovered on
  */
-export const getEmissionValue = (filteredData) => {
-    return ((d) => {
-        const countryEmission = filteredData.find(({Entity}) => d.properties.name.includes(Entity));
+export const getEmissionValue = (filteredData) => ((d) => {
+        const countryEmission = filteredData.find(({ Entity }) => d.properties.name.includes(Entity));
         return countryEmission? countryEmission['Annual CO2'] : undefined;
     })
-}

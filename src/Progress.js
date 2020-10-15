@@ -46,7 +46,7 @@ export default class Progress {
     /**
      * Draw the progress bar with play/pause button
      * 
-     * @param {d3.Selection} svg The content to be drawn in.
+     * @param {Node} svg The content to be drawn in.
      */
     draw(svg) {
         this.svg = svg.append('div').classed(styles.progressDiv, true);
@@ -89,7 +89,7 @@ export default class Progress {
     /**
      * Sets playing status
      * 
-     * @param {Boolean} isPlaying
+     * @param {boolean} isPlaying If the timer is running or not
      */
     setPlaying(isPlaying) {
         this.playing = isPlaying;

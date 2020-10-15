@@ -6,7 +6,7 @@ import styles from '../styles/styles';
 /**
  * Opens the popup with line chart for the country
  * 
- * @param {Object} d Mouse click event
+ * @param {object} d Mouse click event
  */
 export const openPopup = (d) => {
     d3.select('.modal').transition().style('display', 'block');
@@ -23,10 +23,11 @@ export const closePopup = () => {
 }
 /**
  * When the user clicks anywhere outside of the modal, close it
- * @param {Object} event Mouse click event
+ *
+ * @param {object} event Mouse click event
  */
 window.onclick = (event) => {
-    if (event.target == modal) {
+    if (event.target === 'modal') {
         closePopup();
     }
   }

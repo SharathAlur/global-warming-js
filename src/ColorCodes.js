@@ -20,12 +20,12 @@ const colorCodes = (svg, highlightLevel) => {
         .append('li').classed(styles.colorCodeli, true)
         .append('text')
         .classed(styles.rangeLabel, true)
-        .classed(styles.noDataLabel, d => d === 'no data')
-        .text( d => convertToText(d));
+        .classed(styles.noDataLabel, (d) => d === 'no data')
+        .text( (d) => convertToText(d));
 
     // Add color ranges
     const colorsSvg = local.append('ul').classed(styles.colorCodeUl, true);
-    d3.range(0, 8, 1).map((value) => {
+    d3.range(0, 8, 1).map((value) => (
         colorsSvg.append('li')
         .classed(styles.colorCodeli, true)
         .append('div')
@@ -35,9 +35,9 @@ const colorCodes = (svg, highlightLevel) => {
         .attr('x', 0)
         .attr('y', 0)
         .attr('aria-level', value)
-        .on('mouseenter', d => highlightLevel(d.path[0].getAttribute('aria-level')))
-        .on('mouseleave', d => highlightLevel(-1));
-    });
+        .on('mouseenter', (d) => highlightLevel(d.path[0].getAttribute('aria-level')))
+        .on('mouseleave', (d) => highlightLevel(-1))
+    ));
 }
 
 export default colorCodes;

@@ -4,8 +4,7 @@ import * as topojson from 'topojson';
 import emissionData from './data/CO2-Emissions-Country-Wise.csv';
 import styles from './styles/styles';
 import { getEmissionLevel, getEmissionValue } from './helpers/dataUtils';
-import { mouseEnter, mouseExit, mouseMove} from './helpers/tooltip';
-import LineChart from './LineChart';
+import { mouseEnter, mouseExit, mouseMove } from './helpers/tooltip';
 import { openPopup } from './helpers/popup';
 
 const initialize = (config) => {
@@ -45,7 +44,7 @@ export default class Map {
     /**
      * Draws the map using the topojson passed in
      * 
-     * @param {Object} data Topojson object for the world map
+     * @param {object} data Topojson object for the world map
      */
     drawMap(data) {
         const countries = topojson.feature(data, data.objects.countries).features;
@@ -53,7 +52,7 @@ export default class Map {
             .data(countries)
             .enter()
             .append("path")
-            .attr('aria-label', country => country.properties.name)
+            .attr('aria-label', (country) => country.properties.name)
             .attr('aria-selected', false)
             .attr('aria-level', 0)
             .attr('aria-valuenow', undefined)
@@ -67,10 +66,11 @@ export default class Map {
 
     /**
      * Loads data for the year
-     * @param {Number} year
+     *
+     * @param {number} year Current year
      */
     loadDataForYear(year) {
-        const filteredData = emissionData.filter(item => item.Year===year);
+        const filteredData = emissionData.filter((item) => item.Year===year);
 
         d3.selectAll(`.${styles.mapCountry}`)
             .transition()
@@ -84,7 +84,7 @@ export default class Map {
     /**
      * Highlights the countries in pertucular level of emission
      * 
-     * @param {Number} level to be highlighted
+     * @param {number} level to be highlighted
      */
     highlightLevel(level) {
         this.svg.selectAll(`.${styles.mapCountry}`).attr('aria-selected', false);
