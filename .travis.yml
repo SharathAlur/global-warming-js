@@ -1,7 +1,11 @@
 language: node_js
 node_js:
- - "node"
-env:
-- MY_VAR=EverythignIsAwesome
-- NODE_ENV=TEST
-- secure: "TsYgfDTXM9DhteoxruftAIm9qbcVFTfBbPmi/Mv9lGkDKZ/b4pputXgbfy2On7dsu5s9Bio/P4Nri61sgVHZm6AJIsNWf2D6Ggiz94oddr0r+7dPp9yqTziPQAKNmMSzCtLff9Dl4BSOiasy/aQy5M+NrD6kXex0xjZyTIEndzk="
+ - 10.6.3
+
+deploy:
+  provider: pages
+  skip-cleanp: true
+  github-token: $GITHUB_TOKEN
+  local_dir: dist
+  on:
+    branch: master
